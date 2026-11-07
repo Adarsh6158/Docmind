@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { useDocumentStore } from './store/documentStore';
 import { useConversationStore } from './store/conversationStore';
 import { useAuthStore } from './store/authStore';
+import { useThemeStore } from './store/themeStore';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import ChatView from './components/ChatView';
@@ -30,14 +31,14 @@ const Dashboard: React.FC = () => {
   }, [token, user, fetchDocuments, loadChats]);
 
   return (
-    <div className="flex flex-col h-dvh overflow-hidden bg-[#09090b] text-zinc-100 selection:bg-zinc-800 selection:text-zinc-100">
+    <div className="flex flex-col h-dvh overflow-hidden bg-zinc-50 dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800">
       <Navbar onUploadClick={() => setIsUploadOpen(true)} />
 
       <div className="flex flex-1 overflow-hidden relative">
         <Sidebar onUploadClick={() => setIsUploadOpen(true)} />
 
         {/* Main application workspace */}
-        <main className="flex-1 overflow-hidden relative flex flex-col bg-[#09090b]">
+        <main className="flex-1 overflow-hidden relative flex flex-col bg-white dark:bg-[#09090b]">
           {activeTab === 'chat' && <ChatView />}
           {activeTab === 'search' && <SearchView />}
           {activeTab === 'chunks' && <ChunksView />}
@@ -50,6 +51,9 @@ const Dashboard: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const theme = useThemeStore((s) => s.theme);
+  const isDark = theme === 'dark';
+
   return (
     <ErrorBoundary>
       <BrowserRouter>
@@ -69,19 +73,21 @@ const App: React.FC = () => {
           position="bottom-right"
           toastOptions={{
             style: {
-              background: '#121215',
-              color: '#f4f4f5',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: isDark ? '#121215' : '#ffffff',
+              color: isDark ? '#f4f4f5' : '#09090b',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e4e4e7',
               borderRadius: '12px',
               fontSize: '13px',
-              boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.5)',
+              boxShadow: isDark
+                ? '0 10px 30px -10px rgba(0, 0, 0, 0.5)'
+                : '0 10px 25px -5px rgba(0, 0, 0, 0.08)',
               padding: '10px 14px',
             },
             success: {
-              iconTheme: { primary: '#10b981', secondary: '#121215' },
+              iconTheme: { primary: '#10b981', secondary: isDark ? '#121215' : '#ffffff' },
             },
             error: {
-              iconTheme: { primary: '#f43f5e', secondary: '#121215' },
+              iconTheme: { primary: '#f43f5e', secondary: isDark ? '#121215' : '#ffffff' },
             },
           }}
         />

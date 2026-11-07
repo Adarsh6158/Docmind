@@ -24,8 +24,8 @@ const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, ind
 
   return (
     <div className={cn(
-      'border rounded-xl bg-[#121215] overflow-hidden transition-colors',
-      expanded ? 'border-white/[0.18]' : 'border-white/[0.08] hover:border-white/[0.14]'
+      'border rounded-xl bg-white dark:bg-[#121215] overflow-hidden transition-colors shadow-xs',
+      expanded ? 'border-zinc-300 dark:border-white/[0.18]' : 'border-zinc-200 dark:border-white/[0.08] hover:border-zinc-300 dark:hover:border-white/[0.14]'
     )}>
       {/* Chunk header */}
       <div
@@ -33,16 +33,16 @@ const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, ind
         onClick={() => setExpanded(!expanded)}
       >
         {/* Index badge */}
-        <div className="size-7 bg-zinc-900 border border-white/[0.08] rounded-md flex items-center justify-center flex-shrink-0">
-          <span className="text-[11px] font-mono font-semibold text-zinc-300">#{chunk.chunkIndex ?? index}</span>
+        <div className="size-7 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/[0.08] rounded-md flex items-center justify-center flex-shrink-0">
+          <span className="text-[11px] font-mono font-semibold text-zinc-700 dark:text-zinc-300">#{chunk.chunkIndex ?? index}</span>
         </div>
 
         {/* File & meta */}
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-zinc-200 truncate font-mono">{chunk.fileName}</p>
+          <p className="text-xs font-medium text-zinc-800 dark:text-zinc-200 truncate font-mono">{chunk.fileName}</p>
           <div className="flex items-center gap-2 mt-0.5">
             {chunk.pageNumber != null && (
-              <span className="text-[11px] font-mono text-zinc-500 flex items-center gap-1">
+              <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 flex items-center gap-1">
                 <FileText className="size-2.5" /> p.{chunk.pageNumber}
               </span>
             )}
@@ -55,19 +55,19 @@ const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, ind
         {/* Right controls */}
         <div className="flex items-center gap-2 flex-shrink-0">
           {pct != null && (
-            <span className="text-[10px] font-mono tabular-nums bg-zinc-900 text-zinc-400 border border-white/[0.06] px-1.5 py-0.5 rounded">
+            <span className="text-[10px] font-mono tabular-nums bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/[0.06] px-1.5 py-0.5 rounded">
               {pct}%
             </span>
           )}
           <button
             onClick={(e) => { e.stopPropagation(); handleCopy(); }}
-            className="size-6 flex items-center justify-center text-zinc-500 hover:text-zinc-200 rounded hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="size-6 flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             title="Copy chunk"
             aria-label="Copy chunk"
           >
-            {copied ? <Check className="size-3 text-emerald-400" /> : <Copy className="size-3" />}
+            {copied ? <Check className="size-3 text-emerald-500" /> : <Copy className="size-3" />}
           </button>
-          <div className="text-zinc-500">
+          <div className="text-zinc-400 dark:text-zinc-500">
             {expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
           </div>
         </div>
@@ -75,15 +75,15 @@ const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, ind
 
       {/* Expanded content */}
       {expanded && (
-        <div className="border-t border-white/[0.06] bg-zinc-950/60 p-3.5 space-y-3">
-          <div className="relative bg-[#0c0c0e] border border-white/[0.06] rounded-lg p-3">
-            <p className="text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap font-mono">{chunk.snippet}</p>
+        <div className="border-t border-zinc-200 dark:border-white/[0.06] bg-zinc-50/70 dark:bg-zinc-950/60 p-3.5 space-y-3">
+          <div className="relative bg-white dark:bg-[#0c0c0e] border border-zinc-200 dark:border-white/[0.06] rounded-lg p-3">
+            <p className="text-xs text-zinc-800 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap font-mono">{chunk.snippet}</p>
             <button
               onClick={handleCopy}
-              className="absolute top-2 right-2 p-1 bg-zinc-900 hover:bg-zinc-800 border border-white/[0.08] rounded text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer"
+              className="absolute top-2 right-2 p-1 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-white/[0.08] rounded text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors cursor-pointer"
               aria-label="Copy snippet"
             >
-              {copied ? <Check className="size-3 text-emerald-400" /> : <Copy className="size-3" />}
+              {copied ? <Check className="size-3 text-emerald-500" /> : <Copy className="size-3" />}
             </button>
           </div>
 
@@ -96,9 +96,9 @@ const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, ind
                 {Object.entries(chunk.metadata)
                   .filter(([k]) => !['snippet'].includes(k))
                   .map(([k, v]) => (
-                    <div key={k} className="bg-zinc-900/80 border border-white/[0.05] rounded-md p-2">
+                    <div key={k} className="bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-200 dark:border-white/[0.05] rounded-md p-2">
                       <p className="text-[9px] font-mono text-zinc-500 capitalize">{k.replace(/_/g, ' ')}</p>
-                      <p className="text-[11px] text-zinc-300 mt-0.5 truncate font-mono">{String(v)}</p>
+                      <p className="text-[11px] text-zinc-800 dark:text-zinc-300 mt-0.5 truncate font-mono">{String(v)}</p>
                     </div>
                   ))}
               </div>
@@ -153,18 +153,18 @@ export const ChunksView: React.FC = () => {
   const uniqueFiles = [...new Set(chunks.map((c) => c.fileName))];
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-[#09090b]">
+    <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-[#09090b] transition-colors duration-200">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-white/[0.08] flex-shrink-0 bg-[#0e0e11]">
+      <div className="px-6 py-4 border-b border-zinc-200 dark:border-white/[0.08] flex-shrink-0 bg-zinc-50 dark:bg-[#0e0e11]">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="size-6 bg-zinc-900 border border-white/[0.1] rounded-md flex items-center justify-center">
-              <Layers className="size-3.5 text-zinc-200" strokeWidth={1.75} />
+            <div className="size-6 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/[0.1] rounded-md flex items-center justify-center">
+              <Layers className="size-3.5 text-zinc-800 dark:text-zinc-200" strokeWidth={1.75} />
             </div>
-            <h2 className="text-xs font-semibold text-zinc-100 uppercase tracking-wider font-mono">Vector Chunks Inspector</h2>
+            <h2 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider font-mono">Vector Chunks Inspector</h2>
             {hasLoaded && (
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-mono tabular-nums bg-zinc-900 border border-white/[0.06] text-zinc-300 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-mono tabular-nums bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/[0.06] text-zinc-700 dark:text-zinc-300 px-2 py-0.5 rounded">
                   {filtered.length} / {chunks.length} chunks
                 </span>
                 {uniqueFiles.length > 1 && (
@@ -176,7 +176,7 @@ export const ChunksView: React.FC = () => {
           <button
             onClick={() => loadChunks()}
             disabled={isLoading}
-            className="flex items-center gap-1.5 text-xs border border-white/[0.08] hover:border-white/[0.16] text-zinc-400 hover:text-zinc-200 px-2.5 py-1 rounded-md transition-colors disabled:opacity-40 cursor-pointer font-mono"
+            className="flex items-center gap-1.5 text-xs border border-zinc-200 dark:border-white/[0.08] hover:border-zinc-300 dark:hover:border-white/[0.16] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 px-2.5 py-1 rounded-md transition-colors disabled:opacity-40 cursor-pointer font-mono"
           >
             <RefreshCw className={cn('size-3', isLoading && 'animate-spin')} />
             <span>Refresh</span>
@@ -185,23 +185,25 @@ export const ChunksView: React.FC = () => {
 
         {/* Vector query input */}
         <div className="flex gap-2 mb-2.5">
-          <div className="flex-1 flex items-center gap-2 bg-[#141418] border border-white/[0.1] focus-within:border-white/[0.22] rounded-xl px-3 py-1.5 transition-colors">
-            <Database className="size-3.5 text-zinc-500 flex-shrink-0" />
+          <div className="flex-1 flex items-center gap-2 bg-white dark:bg-[#141418] border border-zinc-300 dark:border-white/[0.1] focus-within:border-zinc-500 dark:focus-within:border-white/[0.22] rounded-xl px-3 py-1.5 transition-colors shadow-xs">
+            <Database className="size-3.5 text-zinc-400 dark:text-zinc-500 flex-shrink-0" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && loadChunks()}
               placeholder="Query terms to probe specific vector cluster (optional)"
-              className="flex-1 bg-transparent text-xs text-zinc-100 placeholder-zinc-500 outline-none font-mono"
+              className="flex-1 bg-transparent text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none font-mono"
             />
           </div>
           <button
             onClick={() => loadChunks()}
             disabled={isLoading}
             className={cn(
-              'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer border border-white/10',
-              !isLoading ? 'bg-zinc-100 text-zinc-950 hover:bg-white active:scale-[0.98]' : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+              'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer border',
+              !isLoading
+                ? 'bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-white active:scale-[0.98] border-zinc-800 dark:border-white/10'
+                : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 cursor-not-allowed'
             )}
           >
             {isLoading ? <Loader2 className="size-3.5 animate-spin" /> : <BookOpen className="size-3.5" />}
@@ -211,17 +213,17 @@ export const ChunksView: React.FC = () => {
 
         {/* Sub-filter */}
         {hasLoaded && chunks.length > 0 && (
-          <div className="flex items-center gap-2 bg-[#141418] border border-white/[0.06] rounded-lg px-3 py-1.5">
-            <Search className="size-3.5 text-zinc-500 flex-shrink-0" />
+          <div className="flex items-center gap-2 bg-white dark:bg-[#141418] border border-zinc-200 dark:border-white/[0.06] rounded-lg px-3 py-1.5">
+            <Search className="size-3.5 text-zinc-400 dark:text-zinc-500 flex-shrink-0" />
             <input
               type="text"
               value={textFilter}
               onChange={(e) => setTextFilter(e.target.value)}
               placeholder="Filter loaded chunks by text content…"
-              className="flex-1 bg-transparent text-xs text-zinc-100 placeholder-zinc-500 outline-none font-mono"
+              className="flex-1 bg-transparent text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none font-mono"
             />
             {textFilter && (
-              <button onClick={() => setTextFilter('')} className="text-zinc-500 hover:text-zinc-300 text-xs cursor-pointer">
+              <button onClick={() => setTextFilter('')} className="text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 text-xs cursor-pointer">
                 <X className="size-3" />
               </button>
             )}
@@ -233,10 +235,10 @@ export const ChunksView: React.FC = () => {
       <div className="flex-1 overflow-y-auto p-6">
         {!hasLoaded && !isLoading && (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto">
-            <div className="size-12 bg-zinc-900 rounded-xl flex items-center justify-center mb-3 border border-white/[0.08] shadow-xs">
-              <Layers className="size-5 text-zinc-500" strokeWidth={1.5} />
+            <div className="size-12 bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center mb-3 border border-zinc-200 dark:border-white/[0.08] shadow-xs">
+              <Layers className="size-5 text-zinc-400 dark:text-zinc-500" strokeWidth={1.5} />
             </div>
-            <h3 className="text-sm font-semibold text-zinc-200 mb-1">Vector Chunk Index</h3>
+            <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-1">Vector Chunk Index</h3>
             <p className="text-xs text-zinc-500 leading-relaxed mb-4">
               {selectedDoc
                 ? `Browse chunked vector splits for "${selectedDoc.filename}" stored in pgvector.`
@@ -244,7 +246,7 @@ export const ChunksView: React.FC = () => {
             </p>
             <button
               onClick={() => loadChunks()}
-              className="px-4 py-2 bg-zinc-100 text-zinc-950 hover:bg-white active:scale-[0.98] text-xs font-medium rounded-xl transition-all cursor-pointer shadow-xs"
+              className="px-4 py-2 bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-white active:scale-[0.98] text-xs font-medium rounded-xl transition-all cursor-pointer shadow-xs"
             >
               Load Chunks
             </button>
@@ -253,15 +255,15 @@ export const ChunksView: React.FC = () => {
 
         {isLoading && (
           <div className="flex flex-col items-center justify-center h-full gap-2">
-            <Loader2 className="size-6 text-zinc-400 animate-spin" />
-            <p className="text-xs font-mono text-zinc-400">Loading chunk representations…</p>
+            <Loader2 className="size-6 text-zinc-500 dark:text-zinc-400 animate-spin" />
+            <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400">Loading chunk representations…</p>
           </div>
         )}
 
         {hasLoaded && !isLoading && filtered.length === 0 && (
           <div className="text-center py-16">
-            <Tag className="size-8 text-zinc-600 mx-auto mb-2.5" />
-            <p className="text-xs font-medium text-zinc-300">{textFilter ? 'No matching chunks for filter' : 'No vector chunks found'}</p>
+            <Tag className="size-8 text-zinc-400 dark:text-zinc-600 mx-auto mb-2.5" />
+            <p className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{textFilter ? 'No matching chunks for filter' : 'No vector chunks found'}</p>
             <p className="text-[11px] text-zinc-500 mt-1">Upload documents to verify chunk splitting</p>
           </div>
         )}
