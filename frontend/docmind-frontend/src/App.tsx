@@ -31,14 +31,14 @@ const Dashboard: React.FC = () => {
   }, [token, user, fetchDocuments, loadChats]);
 
   return (
-    <div className="flex flex-col h-dvh overflow-hidden bg-zinc-50 dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 selection:bg-zinc-200 dark:selection:bg-zinc-800">
+    <div className="flex flex-col h-dvh overflow-hidden bg-white dark:bg-[#0c0c0e] text-[#171717] dark:text-[#f4f4f5] selection:bg-neutral-200 dark:selection:bg-neutral-800">
       <Navbar onUploadClick={() => setIsUploadOpen(true)} />
 
       <div className="flex flex-1 overflow-hidden relative">
         <Sidebar onUploadClick={() => setIsUploadOpen(true)} />
 
         {/* Main application workspace */}
-        <main className="flex-1 overflow-hidden relative flex flex-col bg-white dark:bg-[#09090b]">
+        <main className="flex-1 overflow-hidden relative flex flex-col bg-white dark:bg-[#0c0c0e]">
           {activeTab === 'chat' && <ChatView />}
           {activeTab === 'search' && <SearchView />}
           {activeTab === 'chunks' && <ChunksView />}
@@ -73,21 +73,21 @@ const App: React.FC = () => {
           position="bottom-right"
           toastOptions={{
             style: {
-              background: isDark ? '#121215' : '#ffffff',
-              color: isDark ? '#f4f4f5' : '#09090b',
-              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e4e4e7',
-              borderRadius: '12px',
+              background: isDark ? '#141416' : '#ffffff',
+              color: isDark ? '#f4f4f5' : '#171717',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #e5e5e5',
+              borderRadius: '10px',
               fontSize: '13px',
               boxShadow: isDark
                 ? '0 10px 30px -10px rgba(0, 0, 0, 0.5)'
-                : '0 10px 25px -5px rgba(0, 0, 0, 0.08)',
-              padding: '10px 14px',
+                : '0 8px 24px -4px rgba(0, 0, 0, 0.08)',
+              padding: '9px 14px',
             },
             success: {
-              iconTheme: { primary: '#10b981', secondary: isDark ? '#121215' : '#ffffff' },
+              iconTheme: { primary: '#10b981', secondary: isDark ? '#141416' : '#ffffff' },
             },
             error: {
-              iconTheme: { primary: '#f43f5e', secondary: isDark ? '#121215' : '#ffffff' },
+              iconTheme: { primary: '#ef4444', secondary: isDark ? '#141416' : '#ffffff' },
             },
           }}
         />

@@ -52,7 +52,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-dvh bg-zinc-50 dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative selection:bg-zinc-200 dark:selection:bg-zinc-800 transition-colors duration-200">
+    <div className="min-h-dvh bg-white dark:bg-[#0c0c0e] text-[#171717] dark:text-[#f4f4f5] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative selection:bg-neutral-200 dark:selection:bg-neutral-800 transition-colors duration-150">
       {/* Top right theme toggle */}
       <div className="absolute top-4 right-4 z-20">
         <ThemeToggle />
@@ -64,33 +64,33 @@ const Login: React.FC = () => {
       />
 
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
+        transition={{ duration: 0.18, ease: 'easeOut' }}
         className="sm:mx-auto sm:w-full sm:max-w-[400px] relative z-10"
       >
         {/* Brand mark */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="size-11 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/[0.12] flex items-center justify-center shadow-xs mb-4">
-            <Layers className="size-5 text-zinc-900 dark:text-zinc-100" strokeWidth={2} />
+          <div className="size-11 rounded-xl bg-[#f5f5f5] dark:bg-[#18181c] border border-[#e5e5e5] dark:border-white/[0.1] flex items-center justify-center shadow-2xs mb-4">
+            <Layers className="size-5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={2} />
           </div>
-          <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 text-balance">
+          <h1 className="text-xl font-semibold tracking-tight text-[#171717] dark:text-[#f4f4f5] text-balance">
             Sign in to DocMind
           </h1>
-          <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 text-pretty">
-            Enterprise Document Intelligence & Grounded RAG
+          <p className="mt-1 text-xs text-[#737373] dark:text-[#a3a3a3] text-pretty">
+            Enterprise document intelligence and grounded knowledge assistant
           </p>
         </div>
 
         {/* Auth card */}
-        <div className="bg-white dark:bg-[#121215] border border-zinc-200/90 dark:border-white/[0.08] shadow-xl dark:shadow-2xl dark:shadow-black/80 rounded-2xl p-6 sm:p-8">
+        <div className="bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.08] shadow-xl dark:shadow-2xl dark:shadow-black/70 rounded-2xl p-6 sm:p-8">
           <form className="space-y-4" onSubmit={handleSubmit} noValidate>
             <div>
-              <label htmlFor="login-username" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
+              <label htmlFor="login-username" className="block text-xs font-medium text-[#171717] dark:text-[#f4f4f5] mb-1.5">
                 Username
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400 dark:text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#a3a3a3]">
                   <User className="size-4" strokeWidth={1.75} />
                 </div>
                 <input
@@ -102,25 +102,25 @@ const Login: React.FC = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
                   className={cn(
-                    'block w-full pl-9 pr-3 py-2 bg-zinc-50 dark:bg-zinc-950 border rounded-xl text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm transition-colors',
-                    'focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400/30',
-                    usernameError ? 'border-red-500/50' : 'border-zinc-200 dark:border-white/[0.08]'
+                    'block w-full pl-9 pr-3 py-2 bg-white dark:bg-[#101013] border rounded-xl text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] text-sm transition-colors',
+                    'focus:outline-none focus:border-[#151515] dark:focus:border-white/30',
+                    usernameError ? 'border-rose-500/60' : 'border-[#e5e5e5] dark:border-white/[0.08]'
                   )}
                 />
               </div>
               {usernameError && (
-                <p className="text-[11px] text-red-500 dark:text-red-400 mt-1.5 pl-0.5">{usernameError}</p>
+                <p className="text-[11px] text-rose-500 mt-1.5 pl-0.5">{usernameError}</p>
               )}
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="login-password" className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                <label htmlFor="login-password" className="block text-xs font-medium text-[#171717] dark:text-[#f4f4f5]">
                   Password
                 </label>
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400 dark:text-zinc-500">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#a3a3a3]">
                   <Lock className="size-4" strokeWidth={1.75} />
                 </div>
                 <input
@@ -132,22 +132,22 @@ const Login: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className={cn(
-                    'block w-full pl-9 pr-9 py-2 bg-zinc-50 dark:bg-zinc-950 border rounded-xl text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-sm transition-colors',
-                    'focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400/30',
-                    passwordError ? 'border-red-500/50' : 'border-zinc-200 dark:border-white/[0.08]'
+                    'block w-full pl-9 pr-9 py-2 bg-white dark:bg-[#101013] border rounded-xl text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] text-sm transition-colors',
+                    'focus:outline-none focus:border-[#151515] dark:focus:border-white/30',
+                    passwordError ? 'border-rose-500/60' : 'border-[#e5e5e5] dark:border-white/[0.08]'
                   )}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] transition-colors cursor-pointer"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="size-4" strokeWidth={1.75} /> : <Eye className="size-4" strokeWidth={1.75} />}
                 </button>
               </div>
               {passwordError && (
-                <p className="text-[11px] text-red-500 dark:text-red-400 mt-1.5 pl-0.5">{passwordError}</p>
+                <p className="text-[11px] text-rose-500 mt-1.5 pl-0.5">{passwordError}</p>
               )}
             </div>
 
@@ -157,8 +157,7 @@ const Login: React.FC = () => {
                 disabled={loading}
                 className={cn(
                   'w-full flex justify-center items-center gap-2 py-2 px-4 rounded-xl text-sm font-medium',
-                  'bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-white active:scale-[0.98] transition-all cursor-pointer shadow-xs',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2',
+                  'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98] transition-all cursor-pointer shadow-2xs',
                   'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100'
                 )}
               >
@@ -177,11 +176,11 @@ const Login: React.FC = () => {
             </div>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-zinc-200 dark:border-white/[0.08] flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="mt-6 pt-5 border-t border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-between text-xs text-[#737373] dark:text-[#a3a3a3]">
             <span>Don't have an account?</span>
             <Link
               to="/register"
-              className="text-zinc-900 dark:text-zinc-200 hover:underline font-medium underline-offset-4 transition-colors"
+              className="text-[#171717] dark:text-[#f4f4f5] hover:underline font-medium underline-offset-4 transition-colors"
             >
               Create account
             </Link>
@@ -189,9 +188,9 @@ const Login: React.FC = () => {
         </div>
 
         {/* Security / System indicator */}
-        <div className="mt-8 flex items-center justify-center gap-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+        <div className="mt-8 flex items-center justify-center gap-1.5 text-xs text-[#a3a3a3]">
           <ShieldCheck className="size-3.5" />
-          <span>Vector Memory · End-to-End Encryption · RAG v2</span>
+          <span>Enterprise security and data encryption</span>
         </div>
       </motion.div>
     </div>

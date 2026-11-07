@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
-  MessageSquare, Plus, Trash2, Clock, MessageSquarePlus, Search, Edit2, Check, X
+  MessageSquare, Plus, Trash2, Clock, Search, Edit2, Check, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useConversationStore } from '../store/conversationStore';
@@ -43,11 +43,11 @@ function getGroupLabel(dateStr: string): string {
 }
 
 const SkeletonChat: React.FC = () => (
-  <div className="p-2.5 rounded-xl border border-zinc-200 dark:border-white/[0.05] bg-white dark:bg-zinc-900/40 flex items-center gap-2.5 animate-pulse">
-    <div className="size-6 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex-shrink-0" />
+  <div className="p-2.5 rounded-xl border border-[#e5e5e5] dark:border-white/[0.05] bg-white dark:bg-[#141416] flex items-center gap-2.5 animate-pulse">
+    <div className="size-6 rounded-lg bg-[#f5f5f5] dark:bg-white/[0.06] flex-shrink-0" />
     <div className="flex-1 space-y-1.5">
-      <div className="h-3 bg-zinc-100 dark:bg-zinc-800 rounded w-4/5" />
-      <div className="h-2 bg-zinc-100/60 dark:bg-zinc-800/60 rounded w-1/3" />
+      <div className="h-3 bg-[#f5f5f5] dark:bg-white/[0.06] rounded w-4/5" />
+      <div className="h-2 bg-[#f5f5f5]/80 dark:bg-white/[0.04] rounded w-1/3" />
     </div>
   </div>
 );
@@ -113,16 +113,16 @@ const ChatItem: React.FC<{
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 4 }}
+      initial={{ opacity: 0, y: 3 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.15 }}
+      transition={{ duration: 0.12 }}
       onClick={isEditing ? undefined : onSelect}
       className={cn(
         'group relative flex items-center justify-between gap-2 p-2 rounded-xl border transition-all cursor-pointer select-none',
         isActive
-          ? 'border-zinc-300 dark:border-white/[0.2] bg-zinc-100/90 dark:bg-zinc-800/80 shadow-xs text-zinc-900 dark:text-zinc-100'
-          : 'border-zinc-200/80 dark:border-white/[0.05] bg-white dark:bg-zinc-900/40 hover:border-zinc-300 dark:hover:border-white/[0.1] hover:bg-zinc-50 dark:hover:bg-zinc-800/40 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100'
+          ? 'border-[#151515] dark:border-white/[0.25] bg-white dark:bg-[#18181c] shadow-2xs text-[#171717] dark:text-[#f4f4f5]'
+          : 'border-[#e5e5e5] dark:border-white/[0.05] bg-white dark:bg-[#141416] hover:border-neutral-300 dark:hover:border-white/[0.1] text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5]'
       )}
     >
       <div className="flex items-start gap-2 min-w-0 flex-1">
@@ -130,8 +130,8 @@ const ChatItem: React.FC<{
           className={cn(
             'size-6 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors',
             isActive
-              ? 'bg-zinc-200 dark:bg-zinc-700/60 text-zinc-900 dark:text-zinc-100'
-              : 'bg-zinc-100 dark:bg-zinc-950 text-zinc-500 group-hover:text-zinc-800 dark:group-hover:text-zinc-300'
+              ? 'bg-[#f5f5f5] dark:bg-white/[0.1] text-[#171717] dark:text-[#f4f4f5]'
+              : 'bg-[#fafafa] dark:bg-[#1a1a1e] text-[#a3a3a3] group-hover:text-[#171717] dark:group-hover:text-[#f4f4f5]'
           )}
         >
           <MessageSquare className="size-3.5" strokeWidth={1.75} />
@@ -146,7 +146,7 @@ const ChatItem: React.FC<{
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-full bg-white dark:bg-zinc-950 border border-zinc-400 dark:border-zinc-500 text-zinc-900 dark:text-zinc-100 text-xs rounded px-2 py-0.5 focus:outline-none"
+                className="w-full bg-white dark:bg-[#101013] border border-[#151515] dark:border-white/30 text-[#171717] dark:text-[#f4f4f5] text-xs rounded px-2 py-0.5 focus:outline-none font-sans"
                 aria-label="Edit chat title"
               />
               <button
@@ -159,7 +159,7 @@ const ChatItem: React.FC<{
               <button
                 onClick={handleCancelEdit}
                 aria-label="Cancel"
-                className="p-1 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 rounded cursor-pointer"
+                className="p-1 text-[#a3a3a3] hover:text-[#171717] dark:text-[#737373] dark:hover:text-[#f4f4f5] rounded cursor-pointer"
               >
                 <X className="size-3.5" />
               </button>
@@ -170,8 +170,8 @@ const ChatItem: React.FC<{
                 {conversation.title}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <Clock className="size-2.5 text-zinc-400 dark:text-zinc-500 flex-shrink-0" />
-                <span className="text-[10px] font-mono text-zinc-500 tabular-nums">
+                <Clock className="size-2.5 text-[#a3a3a3] flex-shrink-0" />
+                <span className="text-[11px] font-sans text-[#a3a3a3]">
                   {formatRelativeTime(conversation.updatedAt)}
                 </span>
               </div>
@@ -185,7 +185,7 @@ const ChatItem: React.FC<{
           <button
             onClick={handleStartEdit}
             aria-label="Rename conversation"
-            className="size-6 flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300 transition-all cursor-pointer"
+            className="size-6 flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100 hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] text-[#a3a3a3] hover:text-[#171717] dark:text-[#737373] dark:hover:text-[#f4f4f5] transition-all cursor-pointer"
             title="Rename"
           >
             <Edit2 className="size-3" />
@@ -196,8 +196,8 @@ const ChatItem: React.FC<{
             className={cn(
               'h-6 flex items-center justify-center rounded-md text-xs transition-all cursor-pointer',
               confirmDelete
-                ? 'px-1.5 bg-rose-50 dark:bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-500/25 font-mono text-[10px]'
-                : 'w-6 opacity-0 group-hover:opacity-100 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-zinc-400 hover:text-rose-600 dark:text-zinc-500 dark:hover:text-rose-400'
+                ? 'px-1.5 bg-rose-50 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400 border border-rose-200 dark:border-rose-500/25 font-sans font-medium text-[10px]'
+                : 'w-6 opacity-0 group-hover:opacity-100 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[#a3a3a3] hover:text-rose-600 dark:text-[#737373] dark:hover:text-rose-400'
             )}
             title="Delete"
           >
@@ -259,44 +259,45 @@ export const ChatsPanel: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      {/* Search filter input */}
-      <div className="p-2.5 border-b border-zinc-200 dark:border-white/[0.06] flex-shrink-0 space-y-2">
+      {/* Top action bar: New Conversation + Search */}
+      <div className="p-2.5 space-y-2 border-b border-[#e5e5e5] dark:border-white/[0.06] flex-shrink-0 bg-[#fafafa] dark:bg-[#101013]">
         <button
           onClick={handleNewChat}
-          aria-label="Start a new chat"
           className={cn(
-            'w-full flex items-center justify-center gap-2 py-1.5 px-3 rounded-lg text-xs font-medium',
-            'bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-200/90 dark:bg-zinc-800 dark:hover:bg-zinc-700/80 dark:text-zinc-200 dark:border-white/[0.08] active:scale-[0.98] transition-all cursor-pointer'
+            'w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium',
+            'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100',
+            'active:scale-[0.98] transition-all shadow-2xs cursor-pointer'
           )}
         >
-          <Plus className="size-3.5" />
-          <span>New Conversation</span>
+          <div className="flex items-center gap-2">
+            <Plus className="size-3.5" strokeWidth={2} />
+            <span>New Conversation</span>
+          </div>
+          <span className="text-[10px] font-mono opacity-60">⌘K</span>
         </button>
 
-        {conversations.length > 3 && (
-          <div className="relative">
-            <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search conversations…"
-              className="w-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/[0.08] focus:border-zinc-400 dark:focus:border-zinc-500 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 text-xs rounded-lg pl-8 pr-7 py-1.5 focus:outline-none transition-colors"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
-                aria-label="Clear search"
-              >
-                <X className="size-3" />
-              </button>
-            )}
-          </div>
-        )}
+        {/* Search Input */}
+        <div className="relative">
+          <Search className="absolute left-2.5 top-2 size-3.5 text-[#a3a3a3]" />
+          <input
+            type="text"
+            placeholder="Search conversations…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.08] rounded-lg pl-8 pr-7 py-1.5 text-xs text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] outline-none focus:border-[#151515] dark:focus:border-white/20 transition-colors shadow-2xs font-sans"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-2 text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] cursor-pointer"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Chat list */}
+      {/* Conversations List */}
       <div className="flex-1 overflow-y-auto p-2.5 space-y-3">
         {isLoadingChats ? (
           <div className="space-y-1.5">
@@ -304,58 +305,45 @@ export const ChatsPanel: React.FC = () => {
             <SkeletonChat />
             <SkeletonChat />
           </div>
-        ) : conversations.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.15 }}
-            className="flex flex-col items-center justify-center h-48 text-center px-4"
-          >
-            <div className="size-10 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/[0.08] rounded-xl flex items-center justify-center mb-2.5 shadow-xs">
-              <MessageSquarePlus className="size-5 text-zinc-400 dark:text-zinc-500" strokeWidth={1.5} />
-            </div>
-            <p className="text-xs text-zinc-800 dark:text-zinc-200 font-medium">No conversations</p>
-            <p className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">
-              Start a new chat to query your indexed corpus
-            </p>
-            <button
-              onClick={handleNewChat}
-              className="mt-2.5 text-xs text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white font-medium underline underline-offset-4 transition-colors cursor-pointer"
-            >
-              Start conversation &rarr;
-            </button>
-          </motion.div>
         ) : filteredConversations.length === 0 ? (
-          <div className="text-center py-8 text-zinc-400 dark:text-zinc-500 text-xs font-mono">
-            No conversations match "{searchQuery}"
+          <div className="flex flex-col items-center justify-center h-48 text-center px-4">
+            <div className="size-9 bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.08] rounded-xl flex items-center justify-center mb-2 shadow-2xs">
+              <MessageSquare className="size-4 text-[#a3a3a3]" strokeWidth={1.5} />
+            </div>
+            <p className="text-xs text-[#171717] dark:text-[#f4f4f5] font-medium">
+              {searchQuery ? 'No matching conversations' : 'No conversations yet'}
+            </p>
+            <p className="text-[11px] text-[#737373] dark:text-[#a3a3a3] mt-0.5">
+              {searchQuery ? 'Try another search query' : 'Start a new conversation to ask questions'}
+            </p>
           </div>
         ) : (
-          <AnimatePresence mode="popLayout">
-            {groupKeys.map((key) => {
-              const items = groupedConversations[key];
-              if (!items || items.length === 0) return null;
+          groupKeys.map((group) => {
+            const chats = groupedConversations[group];
+            if (!chats || chats.length === 0) return null;
 
-              return (
-                <div key={key} className="space-y-1">
-                  <div className="px-1 text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-                    {key}
-                  </div>
-                  <div className="space-y-1">
-                    {items.map((chat) => (
+            return (
+              <div key={group} className="space-y-1">
+                <p className="text-xs font-medium text-[#737373] dark:text-[#a3a3a3] px-2 py-0.5">
+                  {group}
+                </p>
+                <div className="space-y-1">
+                  <AnimatePresence mode="popLayout">
+                    {chats.map((chat) => (
                       <ChatItem
                         key={chat.id}
                         conversation={chat}
-                        isActive={activeConversationId === chat.id}
+                        isActive={chat.id === activeConversationId}
                         onSelect={() => handleSelectChat(chat.id)}
                         onDelete={() => deleteChat(chat.id)}
                         onRename={(newTitle) => renameChat(chat.id, newTitle)}
                       />
                     ))}
-                  </div>
+                  </AnimatePresence>
                 </div>
-              );
-            })}
-          </AnimatePresence>
+              </div>
+            );
+          })
         )}
       </div>
     </div>

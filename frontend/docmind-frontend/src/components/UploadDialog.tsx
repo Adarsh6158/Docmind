@@ -31,10 +31,10 @@ function formatBytes(bytes: number): string {
 
 function getFileIcon(name: string) {
   const ext = name.split('.').pop()?.toLowerCase();
-  if (ext === 'pdf') return <FileText className="size-4 text-zinc-600 dark:text-zinc-300" strokeWidth={1.75} />;
-  if (ext === 'csv') return <FilePieChart className="size-4 text-zinc-600 dark:text-zinc-300" strokeWidth={1.75} />;
-  if (ext === 'docx') return <FileType className="size-4 text-zinc-600 dark:text-zinc-300" strokeWidth={1.75} />;
-  return <File className="size-4 text-zinc-500 dark:text-zinc-400" strokeWidth={1.75} />;
+  if (ext === 'pdf') return <FileText className="size-4 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
+  if (ext === 'csv') return <FilePieChart className="size-4 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
+  if (ext === 'docx') return <FileType className="size-4 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
+  return <File className="size-4 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.75} />;
 }
 
 export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) => {
@@ -105,25 +105,25 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-xs" onClick={handleClose} />
+      <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-2xs" onClick={handleClose} />
 
       {/* Dialog */}
-      <div className="relative z-10 w-full max-w-lg bg-white dark:bg-[#121215] border border-zinc-200 dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative z-10 w-full max-w-lg bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-200 dark:border-white/[0.08]">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#e5e5e5] dark:border-white/[0.08]">
           <div className="flex items-center gap-2.5">
-            <div className="size-7 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/[0.1] rounded-lg flex items-center justify-center">
-              <Upload className="size-3.5 text-zinc-800 dark:text-zinc-200" strokeWidth={1.75} />
+            <div className="size-7 bg-[#f5f5f5] dark:bg-white/[0.08] border border-[#e5e5e5] dark:border-white/[0.1] rounded-lg flex items-center justify-center">
+              <Upload className="size-3.5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />
             </div>
             <div>
-              <h2 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider font-mono">Upload & Ingest</h2>
-              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Supported formats: PDF, DOCX, TXT, MD, CSV</p>
+              <h2 className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight">Upload documents</h2>
+              <p className="text-xs text-[#737373] dark:text-[#a3a3a3]">PDF, DOCX, TXT, MD, and CSV supported</p>
             </div>
           </div>
           <button
             onClick={handleClose}
             disabled={isUploading}
-            className="size-7 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors text-zinc-400 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 disabled:opacity-40 cursor-pointer"
+            className="size-7 flex items-center justify-center hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] rounded-md transition-colors text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] disabled:opacity-40 cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="size-4" />
@@ -137,26 +137,26 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
             className={cn(
               'border border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors select-none',
               isDragActive
-                ? 'border-zinc-800 bg-zinc-50 dark:border-zinc-300 dark:bg-white/[0.04]'
-                : 'border-zinc-300 hover:border-zinc-400 bg-zinc-50/50 hover:bg-zinc-100/50 dark:border-white/[0.12] dark:hover:border-white/[0.25] dark:bg-transparent dark:hover:bg-white/[0.02]'
+                ? 'border-[#151515] bg-[#fafafa] dark:border-white dark:bg-white/[0.04]'
+                : 'border-[#e5e5e5] hover:border-neutral-400 bg-[#fafafa]/60 hover:bg-[#fafafa] dark:border-white/[0.12] dark:hover:border-white/[0.22] dark:bg-transparent dark:hover:bg-white/[0.02]'
             )}
           >
             <input {...getInputProps()} />
             <div className="flex flex-col items-center gap-2.5">
-              <div className="size-10 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center shadow-xs">
-                <Upload className="size-5 text-zinc-500 dark:text-zinc-400" strokeWidth={1.5} />
+              <div className="size-10 rounded-xl bg-white dark:bg-[#18181c] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-center shadow-2xs">
+                <Upload className="size-4.5 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.5} />
               </div>
               <div>
-                <p className="text-xs font-medium text-zinc-800 dark:text-zinc-200">
+                <p className="text-xs font-medium text-[#171717] dark:text-[#f4f4f5]">
                   {isDragActive ? 'Drop files here' : 'Drag and drop documents here'}
                 </p>
-                <p className="text-zinc-500 text-[11px] mt-0.5">
-                  or <span className="text-zinc-900 dark:text-zinc-300 underline underline-offset-2">choose from your device</span>
+                <p className="text-[#737373] dark:text-[#a3a3a3] text-[11px] mt-0.5">
+                  or <span className="text-[#171717] dark:text-[#f4f4f5] underline underline-offset-2">choose from your device</span>
                 </p>
               </div>
               <div className="flex flex-wrap gap-1 justify-center mt-1">
                 {['PDF', 'DOCX', 'TXT', 'MD', 'CSV'].map((ext) => (
-                  <span key={ext} className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/[0.06]">
+                  <span key={ext} className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white dark:bg-white/[0.06] text-[#737373] dark:text-[#a3a3a3] border border-[#e5e5e5] dark:border-white/[0.06]">
                     .{ext.toLowerCase()}
                   </span>
                 ))}
@@ -166,12 +166,12 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
 
           {/* Stats Bar */}
           {files.length > 0 && (
-            <div className="flex items-center justify-between mt-3 px-1 text-[11px] font-mono">
-              <span className="text-zinc-500 dark:text-zinc-400 tabular-nums">{files.length} file(s) · {formatBytes(totalSize)}</span>
+            <div className="flex items-center justify-between mt-3 px-1 text-xs text-[#737373] dark:text-[#a3a3a3]">
+              <span className="tabular-nums">{files.length} file(s) · {formatBytes(totalSize)}</span>
               <button
                 onClick={() => setFiles([])}
                 disabled={isUploading}
-                className="text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 flex items-center gap-1 transition-colors disabled:opacity-40 cursor-pointer"
+                className="text-[#737373] hover:text-rose-600 dark:text-[#a3a3a3] dark:hover:text-rose-400 flex items-center gap-1 transition-colors disabled:opacity-40 cursor-pointer"
               >
                 <Trash2 className="size-3" />
                 <span>Clear queue</span>
@@ -183,33 +183,33 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
           {files.length > 0 && (
             <div className="mt-2 space-y-1.5 max-h-52 overflow-y-auto pr-1">
               {files.map((uf) => (
-                <div key={uf.id} className="p-2.5 bg-zinc-50 dark:bg-zinc-950/80 rounded-xl border border-zinc-200 dark:border-white/[0.06] space-y-1.5">
+                <div key={uf.id} className="p-2.5 bg-[#fafafa] dark:bg-[#18181c] rounded-xl border border-[#e5e5e5] dark:border-white/[0.06] space-y-1.5 shadow-2xs">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 min-w-0">
                       {getFileIcon(uf.file.name)}
-                      <p className="text-xs text-zinc-800 dark:text-zinc-200 font-mono truncate max-w-[220px]">{uf.file.name}</p>
+                      <p className="text-xs text-[#171717] dark:text-[#f4f4f5] font-medium truncate max-w-[220px]">{uf.file.name}</p>
                     </div>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
-                      <span className="text-[10px] font-mono tabular-nums text-zinc-500">{formatBytes(uf.file.size)}</span>
+                      <span className="text-[10px] font-mono tabular-nums text-[#a3a3a3]">{formatBytes(uf.file.size)}</span>
                       {uf.status === 'pending' && (
-                        <button onClick={() => removeFile(uf.id)} className="text-zinc-400 hover:text-rose-600 dark:text-zinc-500 dark:hover:text-rose-400 transition-colors cursor-pointer">
+                        <button onClick={() => removeFile(uf.id)} className="text-[#a3a3a3] hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer">
                           <X className="size-3" />
                         </button>
                       )}
-                      {uf.status === 'uploading' && <Loader2 className="size-3 text-zinc-600 dark:text-zinc-300 animate-spin" />}
-                      {uf.status === 'done' && <CheckCircle2 className="size-3.5 text-emerald-500 dark:text-emerald-400" />}
-                      {uf.status === 'error' && <AlertCircle className="size-3.5 text-rose-500 dark:text-rose-400" />}
+                      {uf.status === 'uploading' && <Loader2 className="size-3 text-[#171717] dark:text-[#f4f4f5] animate-spin" />}
+                      {uf.status === 'done' && <CheckCircle2 className="size-3.5 text-emerald-500" />}
+                      {uf.status === 'error' && <AlertCircle className="size-3.5 text-rose-500" />}
                     </div>
                   </div>
 
                   {/* Progress bar */}
-                  <div className="w-full bg-zinc-200 dark:bg-zinc-900 rounded-full h-1 overflow-hidden">
+                  <div className="w-full bg-[#e5e5e5] dark:bg-white/[0.08] rounded-full h-1 overflow-hidden">
                     <div
                       className={cn(
                         'h-1 rounded-full transition-all duration-200',
-                        uf.status === 'done' ? 'bg-emerald-500 dark:bg-emerald-400' :
+                        uf.status === 'done' ? 'bg-emerald-500' :
                         uf.status === 'error' ? 'bg-rose-500' :
-                        uf.status === 'uploading' ? 'bg-zinc-700 dark:bg-zinc-300' : 'bg-transparent'
+                        uf.status === 'uploading' ? 'bg-[#151515] dark:bg-white' : 'bg-transparent'
                       )}
                       style={{ width: uf.status === 'pending' ? '0%' : `${uf.progress}%` }}
                     />
@@ -219,7 +219,7 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
                     <p className="text-[11px] text-rose-600 dark:text-rose-400">{uf.error}</p>
                   )}
                   {uf.status === 'done' && uf.result && (
-                    <p className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+                    <p className="text-xs font-sans font-medium text-emerald-600 dark:text-emerald-400">
                       ✓ {uf.result.chunksCreated ?? 0} vector chunks embedded
                     </p>
                   )}
@@ -230,11 +230,11 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2.5 px-5 py-3 border-t border-zinc-200 dark:border-white/[0.08] bg-zinc-50 dark:bg-zinc-950/40">
+        <div className="flex items-center justify-end gap-2.5 px-5 py-3 border-t border-[#e5e5e5] dark:border-white/[0.08] bg-[#fafafa] dark:bg-[#18181c]">
           <button
             onClick={handleClose}
             disabled={isUploading}
-            className="px-3.5 py-1.5 text-xs text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 border border-zinc-200 dark:border-white/[0.08] hover:border-zinc-300 dark:hover:border-white/[0.16] rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
+            className="px-3.5 py-1.5 text-xs text-[#737373] hover:text-[#171717] dark:text-[#a3a3a3] dark:hover:text-[#f4f4f5] border border-[#e5e5e5] dark:border-white/[0.08] hover:border-neutral-300 dark:hover:border-white/[0.16] rounded-lg transition-colors disabled:opacity-50 cursor-pointer bg-white dark:bg-[#141416] shadow-2xs"
           >
             {allDone ? 'Done' : 'Cancel'}
           </button>
@@ -243,10 +243,10 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
               onClick={handleUpload}
               disabled={isUploading || pendingCount === 0}
               className={cn(
-                'flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-lg transition-all border shadow-xs cursor-pointer',
+                'flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-lg transition-all border shadow-2xs cursor-pointer',
                 !isUploading && pendingCount > 0
-                  ? 'bg-zinc-900 text-zinc-50 hover:bg-zinc-800 border-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-white dark:border-white/20 active:scale-[0.98]'
-                  : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 border-transparent cursor-not-allowed opacity-50'
+                  ? 'bg-[#151515] text-white hover:bg-black border-transparent dark:bg-white dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98]'
+                  : 'bg-[#f5f5f5] dark:bg-white/[0.04] text-[#a3a3a3] border-transparent cursor-not-allowed'
               )}
             >
               {isUploading ? (

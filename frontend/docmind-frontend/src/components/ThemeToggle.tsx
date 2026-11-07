@@ -12,8 +12,8 @@ export const ThemeToggle: React.FC<{ className?: string }> = ({ className }) => 
       onClick={toggleTheme}
       className={cn(
         'size-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer select-none',
-        'border border-zinc-200 dark:border-white/[0.08]',
-        'bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:text-zinc-300',
+        'border border-[#e5e5e5] dark:border-white/[0.08] shadow-2xs',
+        'bg-[#f5f5f5] hover:bg-[#efefef] text-[#171717] dark:bg-white/[0.06] dark:hover:bg-white/[0.1] dark:text-[#f4f4f5]',
         'active:scale-[0.96]',
         className
       )}
@@ -21,13 +21,12 @@ export const ThemeToggle: React.FC<{ className?: string }> = ({ className }) => 
       aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
     >
       {isDark ? (
-        <Sun className="size-4 text-zinc-300" strokeWidth={1.75} />
+        <Sun className="size-4 text-[#f4f4f5]" strokeWidth={1.75} />
       ) : (
-        <Moon className="size-4 text-zinc-700" strokeWidth={1.75} />
+        <Moon className="size-4 text-[#171717]" strokeWidth={1.75} />
       )}
     </button>
   );
 };
 
 export default ThemeToggle;
-

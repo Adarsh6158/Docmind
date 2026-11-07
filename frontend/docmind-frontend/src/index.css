@@ -1,10 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand: #3b82f6;
-  --color-brand-hover: #2563eb;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-page: #ffffff;
+  --color-surface-subtle: #fafafa;
+  --color-surface-contrast: #f5f5f5;
+  --color-line: #e5e5e5;
+  --color-content-primary: #171717;
+  --color-content-secondary: #737373;
+  --color-content-muted: #a3a3a3;
+  --color-accent: #1f78ff;
 }
 
 * {
@@ -15,13 +25,13 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* ─── Ultra-thin Scrollbars ─── */
+/* ─── Ultra-thin Minimalist Scrollbars ─── */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -30,14 +40,14 @@ html, body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.12);
   border-radius: 9999px;
 }
 .dark ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.12);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.22);
 }
 .dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.22);
@@ -55,31 +65,31 @@ button, input, textarea {
   font-family: inherit;
 }
 
-/* ─── Typing dots ─── */
+/* ─── Typing Indicator Dots ─── */
 .typing-dot {
-  width: 5px;
-  height: 5px;
-  background: #71717a;
+  width: 4px;
+  height: 4px;
+  background: #737373;
   border-radius: 50%;
   display: inline-block;
   animation: typingBounce 1.4s infinite ease-in-out;
 }
 .typing-dot:nth-child(1) { animation-delay: 0s; }
-.typing-dot:nth-child(2) { animation-delay: 0.18s; }
-.typing-dot:nth-child(3) { animation-delay: 0.36s; }
+.typing-dot:nth-child(2) { animation-delay: 0.16s; }
+.typing-dot:nth-child(3) { animation-delay: 0.32s; }
 
 @keyframes typingBounce {
   0%, 60%, 100% {
     transform: translateY(0);
-    opacity: 0.3;
+    opacity: 0.35;
   }
   30% {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     opacity: 1;
   }
 }
 
-/* ─── Blinking Cursor for Streaming ─── */
+/* ─── Blinking Cursor for Streaming Output ─── */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -87,8 +97,8 @@ button, input, textarea {
 .cursor-blink {
   display: inline-block;
   width: 2px;
-  height: 1.1em;
-  background: #3b82f6;
+  height: 1.05em;
+  background: #1f78ff;
   margin-left: 2px;
   vertical-align: text-bottom;
   border-radius: 1px;
@@ -98,12 +108,12 @@ button, input, textarea {
 /* ─── Markdown Prose Styling ─── */
 .prose {
   max-width: none;
-  color: #3f3f46;
-  font-size: 0.925rem;
+  color: #374151;
+  font-size: 0.9rem;
   line-height: 1.65;
 }
 .dark .prose {
-  color: #d4d4d8;
+  color: #d1d5db;
 }
 .prose p {
   margin-bottom: 0.75rem;
@@ -112,18 +122,18 @@ button, input, textarea {
   margin-bottom: 0;
 }
 .prose h1, .prose h2, .prose h3, .prose h4 {
-  color: #09090b;
+  color: #111827;
   font-weight: 600;
   letter-spacing: -0.015em;
   margin-top: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 .dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4 {
-  color: #fafafa;
+  color: #f9fafb;
 }
-.prose h1 { font-size: 1.18rem; }
-.prose h2 { font-size: 1.05rem; }
-.prose h3 { font-size: 0.95rem; }
+.prose h1 { font-size: 1.15rem; }
+.prose h2 { font-size: 1.02rem; }
+.prose h3 { font-size: 0.92rem; }
 .prose ul, .prose ol {
   padding-left: 1.25rem;
   margin-bottom: 0.75rem;
@@ -134,72 +144,72 @@ button, input, textarea {
   margin-bottom: 0.25rem;
 }
 .prose strong {
-  color: #09090b;
+  color: #111827;
   font-weight: 600;
 }
 .dark .prose strong {
   color: #ffffff;
 }
 .prose em {
-  color: #71717a;
+  color: #6b7280;
 }
 .dark .prose em {
-  color: #a1a1aa;
+  color: #9ca3af;
 }
 .prose code {
-  background: rgba(0, 0, 0, 0.05);
-  color: #18181b;
+  background: #f3f4f6;
+  color: #111827;
   padding: 0.15rem 0.35rem;
   border-radius: 0.375rem;
   font-size: 0.85em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-family: var(--font-mono);
+  border: 1px solid #e5e7eb;
 }
 .dark .prose code {
   background: rgba(255, 255, 255, 0.06);
-  color: #e4e4e7;
+  color: #e5e7eb;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .prose pre {
-  background: #f4f4f5;
-  border: 1px solid #e4e4e7;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
   padding: 0.875rem 1rem;
   overflow-x: auto;
   margin: 0.75rem 0;
 }
 .dark .prose pre {
-  background: #111114;
+  background: #0d0e12;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .prose pre code {
   background: none;
   border: none;
   padding: 0;
-  color: #18181b;
+  color: #111827;
 }
 .dark .prose pre code {
-  color: #e4e4e7;
+  color: #e5e7eb;
 }
 .prose blockquote {
-  border-left: 2px solid #3b82f6;
+  border-left: 2px solid #1f78ff;
   padding-left: 0.85rem;
-  color: #52525b;
+  color: #4b5563;
   margin: 0.75rem 0;
   font-style: italic;
 }
 .dark .prose blockquote {
-  color: #a1a1aa;
+  color: #9ca3af;
 }
 .prose hr {
-  border-color: #e4e4e7;
+  border-color: #e5e7eb;
   margin: 1rem 0;
 }
 .dark .prose hr {
   border-color: rgba(255, 255, 255, 0.08);
 }
 .prose a {
-  color: #2563eb;
+  color: #1f78ff;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -210,10 +220,10 @@ button, input, textarea {
   width: 100%;
   border-collapse: collapse;
   margin: 0.75rem 0;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 .prose th, .prose td {
-  border: 1px solid #e4e4e7;
+  border: 1px solid #e5e7eb;
   padding: 0.5rem 0.75rem;
   text-align: left;
 }
@@ -221,26 +231,26 @@ button, input, textarea {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .prose th {
-  background: #f4f4f5;
-  color: #09090b;
+  background: #f9fafb;
+  color: #111827;
   font-weight: 600;
 }
 .dark .prose th {
-  background: rgba(255, 255, 255, 0.03);
-  color: #f4f4f5;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f9fafb;
 }
 
 /* ─── Prism Syntax Highlighting ─── */
-.token.comment, .token.prolog, .token.doctype, .token.cdata { color: #71717a; font-style: italic; }
-.token.punctuation { color: #71717a; }
-.dark .token.punctuation { color: #a1a1aa; }
-.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: #e11d48; }
+.token.comment, .token.prolog, .token.doctype, .token.cdata { color: #6b7280; font-style: italic; }
+.token.punctuation { color: #6b7280; }
+.dark .token.punctuation { color: #9ca3af; }
+.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: #dc2626; }
 .dark .token.property, .dark .token.tag, .dark .token.boolean, .dark .token.number, .dark .token.constant, .dark .token.symbol, .dark .token.deleted { color: #f87171; }
 .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: #059669; }
 .dark .token.selector, .dark .token.attr-name, .dark .token.string, .dark .token.char, .dark .token.builtin, .dark .token.inserted { color: #34d399; }
 .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: #0284c7; }
 .dark .token.operator, .dark .token.entity, .dark .token.url, .dark .language-css .token.string, .dark .style .token.string { color: #38bdf8; }
-.token.atrule, .token.attr-value, .token.keyword { color: #6366f1; font-weight: 500; }
+.token.atrule, .token.attr-value, .token.keyword { color: #4f46e5; font-weight: 500; }
 .dark .token.atrule, .dark .token.attr-value, .dark .token.keyword { color: #818cf8; }
 .token.function, .token.class-name { color: #d97706; }
 .dark .token.function, .dark .token.class-name { color: #fbbf24; }
