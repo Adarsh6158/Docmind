@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { chatApi } from '../services/api';
 import { useDocumentStore } from '../store/documentStore';
+import { useAuthStore } from '../store/authStore';
 import type { CitationDto } from '../types';
 import { cn } from '../lib/utils';
 import toast from 'react-hot-toast';
@@ -26,8 +27,8 @@ const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, ind
 
   return (
     <div className={cn(
-      'border rounded-xl bg-white dark:bg-[#141416] overflow-hidden transition-colors shadow-2xs',
-      expanded ? 'border-[#151515]/30 dark:border-white/[0.22]' : 'border-[#e5e5e5] dark:border-white/[0.08] hover:border-neutral-300 dark:hover:border-white/[0.14]'
+      'glass-card rounded-xl overflow-hidden transition-all duration-200',
+      expanded ? 'border-neutral-400 dark:border-white/[0.24] shadow-md' : 'hover:border-neutral-300 dark:hover:border-white/[0.16]'
     )}>
       {/* Chunk header */}
       <div
@@ -126,6 +127,11 @@ export const ChunksView: React.FC = () => {
   const selectedDoc = documents.find((d) => d.id === selectedDocumentId);
 
   const loadChunks = useCallback(async (q = query) => {
+    const token = useAuthStore.getState().token;
+    if (!token) {
+      toast('Please sign in to view vector chunks', { icon: '🔒' });
+      return;
+    }
     setIsLoading(true);
     try {
       const res = await chatApi.searchSimilarity({
@@ -205,13 +211,13 @@ export const ChunksView: React.FC = () => {
             onClick={() => loadChunks()}
             disabled={isLoading}
             className={cn(
-              'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer border',
+              'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium cursor-pointer border',
               !isLoading
-                ? 'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98] border-transparent shadow-2xs'
-                : 'bg-[#f5f5f5] dark:bg-white/[0.04] text-[#a3a3a3] border-transparent cursor-not-allowed'
+                ? 'bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white border-transparent transition-colors duration-150 ease-in-out shadow-2xs'
+                : 'bg-[#f5f5f5] dark:bg-white/[0.04] text-[#a3a3a3] border-transparent cursor-not-allowed transition-colors duration-150 ease-in-out'
             )}
           >
-            {isLoading ? <Loader2 className="size-3.5 animate-spin" /> : <BookOpen className="size-3.5" />}
+            {isLoading ? <Loader2 className="size-3.5 animate-spin text-white" /> : <BookOpen className="size-3.5 text-white" />}
             <span>Load</span>
           </button>
         </div>
@@ -241,7 +247,7 @@ export const ChunksView: React.FC = () => {
         {!hasLoaded && !isLoading && (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto">
             <div className="size-11 bg-[#f5f5f5] dark:bg-[#18181c] rounded-xl flex items-center justify-center mb-3 border border-[#e5e5e5] dark:border-white/[0.08] shadow-2xs">
-              <Layers className="size-4.5 text-[#a3a3a3]" strokeWidth={1.5} />
+              <img src="/icons/chunks.png" alt="Chunks" className="size-6 object-contain" />
             </div>
             <h2 className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] mb-1">Vector chunk index</h2>
             <p className="text-xs text-[#737373] dark:text-[#a3a3a3] leading-relaxed mb-4">
@@ -251,7 +257,7 @@ export const ChunksView: React.FC = () => {
             </p>
             <button
               onClick={() => loadChunks()}
-              className="px-4 py-2 bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98] text-xs font-medium rounded-xl transition-all cursor-pointer shadow-2xs"
+              className="px-4 py-2 bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white text-xs font-medium rounded-xl transition-colors duration-150 ease-in-out cursor-pointer shadow-2xs"
             >
               Load chunks
             </button>

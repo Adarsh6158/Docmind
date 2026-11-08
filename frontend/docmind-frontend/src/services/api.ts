@@ -29,15 +29,12 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Catch 401 Unauthorized responses, log out, and redirect to /login
+// Catch 401 Unauthorized responses, log out quietly without hard redirects
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
       useAuthStore.getState().logout();
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
-        window.location.href = '/login';
-      }
     }
     return Promise.reject(error);
   }
@@ -127,9 +124,7 @@ export const chatApi = {
 
     if (response.status === 401) {
       useAuthStore.getState().logout();
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
-        window.location.href = '/login';
-      }
+      useAuthStore.getState().openAuthModal(request.question);
     }
 
     return response;

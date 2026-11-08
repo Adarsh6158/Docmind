@@ -10,9 +10,14 @@ interface AuthState {
   user: UserDto | null;
   token: string | null;
   isLoading: boolean;
+  isAuthModalOpen: boolean;
+  pendingPrompt: string | null;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<UserDto>;
   logout: () => void;
+  openAuthModal: (prompt?: string | null) => void;
+  closeAuthModal: () => void;
+  setPendingPrompt: (prompt: string | null) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,6 +26,30 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isLoading: false,
+      isAuthModalOpen: false,
+      pendingPrompt: null,
+
+      openAuthModal: (prompt?: string | null) => {
+        set({ isAuthModalOpen: true, pendingPrompt: prompt || null });
+        if (prompt && typeof window !== 'undefined') {
+          sessionStorage.setItem('docmind_pending_prompt', prompt);
+        }
+      },
+
+      closeAuthModal: () => {
+        set({ isAuthModalOpen: false });
+      },
+
+      setPendingPrompt: (prompt: string | null) => {
+        set({ pendingPrompt: prompt });
+        if (typeof window !== 'undefined') {
+          if (prompt) {
+            sessionStorage.setItem('docmind_pending_prompt', prompt);
+          } else {
+            sessionStorage.removeItem('docmind_pending_prompt');
+          }
+        }
+      },
 
       login: async (username: string, password: string) => {
         set({ isLoading: true });

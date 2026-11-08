@@ -23,6 +23,7 @@ import {
 import { chatApi } from '../services/api';
 import { useDocumentStore } from '../store/documentStore';
 import { useConversationStore } from '../store/conversationStore';
+import { useAuthStore } from '../store/authStore';
 import type { ConversationMessage, CitationDto } from '../types';
 import { cn } from '../lib/utils';
 import toast from 'react-hot-toast';
@@ -49,10 +50,10 @@ const LiveStreamingIcon: React.FC<{ enabled: boolean; isStreaming?: boolean; cla
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn('shrink-0 text-[#171717] dark:text-[#f4f4f5]', className)}
+      className={cn('shrink-0 text-emerald-500 dark:text-emerald-400 drop-shadow-[0_0_4px_rgba(16,185,129,0.35)]', className)}
       aria-hidden="true"
     >
-      <circle cx="12" cy="20" r="1" fill="currentColor" />
+      <circle cx="12" cy="20" r="1.25" fill="currentColor" />
       <path d="M8.5 16.429a5 5 0 0 1 7 0" className="animate-signal-1" />
       <path d="M5 12.859a10 10 0 0 1 14 0" className="animate-signal-2" />
       <path d="M2 8.82a15 15 0 0 1 20 0" className="animate-signal-3" />
@@ -155,19 +156,26 @@ const CodeBlock: React.FC<{ language: string; code: string }> = ({ language, cod
   const tokens = grammar ? Prism.tokenize(code, grammar) : [code];
 
   return (
-    <div className="my-3 rounded-xl border border-[#e5e5e5] dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0d0e12] overflow-hidden text-xs">
-      <div className="flex items-center justify-between px-3.5 py-1.5 bg-[#f1f5f9] dark:bg-[#16171d] border-b border-[#e5e5e5] dark:border-white/[0.06] text-[#737373] dark:text-[#a3a3a3] font-mono text-[11px]">
-        <span className="font-mono text-xs text-[#737373] dark:text-[#a3a3a3] lowercase">{language || 'code'}</span>
+    <div className="my-3.5 rounded-xl border border-black/[0.08] dark:border-white/[0.1] bg-[#101017] dark:bg-[#09090e] shadow-[0_4px_20px_rgba(0,0,0,0.15)] overflow-hidden text-xs text-gray-200">
+      <div className="h-9 flex items-center justify-between px-3.5 bg-[#181822] dark:bg-[#12121a] border-b border-white/[0.08] select-none">
+        {/* macOS Traffic Lights */}
+        <div className="flex items-center gap-1.5">
+          <div className="size-2.5 rounded-full bg-[#FF5F56] border border-[#E0443E]/60" />
+          <div className="size-2.5 rounded-full bg-[#FFBD2E] border border-[#DEA123]/60" />
+          <div className="size-2.5 rounded-full bg-[#27C93F] border border-[#1AAB29]/60" />
+          <span className="ml-2 font-mono text-[11px] font-semibold text-gray-400 lowercase tracking-wider">{language || 'code'}</span>
+        </div>
+
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-[11px] text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] px-2 py-0.5 rounded bg-[#e2e8f0] dark:bg-white/[0.08] hover:bg-[#cbd5e1] dark:hover:bg-white/[0.14] transition-colors cursor-pointer"
+          className="flex items-center gap-1 text-[11px] text-gray-400 hover:text-white px-2 py-0.5 rounded bg-white/[0.06] hover:bg-white/[0.12] transition-colors cursor-pointer font-sans"
         >
-          {copied ? <Check className="size-3 text-emerald-500" /> : <Copy className="size-3" />}
+          {copied ? <Check className="size-3 text-emerald-400" /> : <Copy className="size-3" />}
           <span>{copied ? 'Copied' : 'Copy'}</span>
         </button>
       </div>
-      <div className="p-3.5 overflow-x-auto">
-        <pre className="font-mono text-xs leading-relaxed text-[#171717] dark:text-[#f4f4f5] m-0 p-0 bg-transparent border-0">
+      <div className="p-3.5 sm:p-4 overflow-x-auto custom-scrollbar">
+        <pre className="font-mono text-xs sm:text-[12.5px] leading-relaxed text-gray-200 m-0 p-0 bg-transparent border-0">
           <code className={`language-${normalizedLang}`}>{renderPrismTokens(tokens, 'code')}</code>
         </pre>
       </div>
@@ -282,34 +290,34 @@ const CitationCard: React.FC<{ citation: CitationDto; index: number }> = ({ cita
   const pct = (score * 100).toFixed(0);
 
   return (
-    <div className="border border-[#e5e5e5] dark:border-white/[0.08] rounded-xl overflow-hidden bg-white dark:bg-[#141416] hover:border-neutral-300 dark:hover:border-white/[0.14] transition-colors shadow-2xs">
+    <div className="glass-card rounded-xl overflow-hidden hover:border-neutral-300 dark:hover:border-white/[0.16] transition-all duration-200">
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center gap-2.5 p-2.5 text-left cursor-pointer"
       >
-        <span className="flex-shrink-0 size-5 bg-[#f5f5f5] dark:bg-white/[0.08] text-[#171717] dark:text-[#f4f4f5] rounded-md text-[11px] flex items-center justify-center font-mono border border-[#e5e5e5] dark:border-white/[0.06]">
+        <span className="flex-shrink-0 size-5 bg-violet-500/10 text-violet-700 dark:text-violet-300 rounded-md text-[11px] flex items-center justify-center font-mono font-semibold border border-violet-500/20">
           {index + 1}
         </span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <FileFormatIcon filename={citation.fileName} size="xs" />
-            <p className="text-xs text-[#171717] dark:text-[#f4f4f5] font-sans font-medium truncate">{citation.fileName}</p>
+            <p className="text-xs text-[#171717] dark:text-[#f4f4f5] font-display font-medium truncate">{citation.fileName}</p>
             {citation.pageNumber && (
-              <span className="text-[11px] text-[#737373] dark:text-[#a3a3a3] font-sans flex-shrink-0">Page {citation.pageNumber}</span>
+              <span className="text-[11px] text-[#737373] dark:text-[#a3a3a3] font-body flex-shrink-0">Page {citation.pageNumber}</span>
             )}
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <div className="flex-1 h-1 bg-[#e5e5e5] dark:bg-white/[0.1] rounded-full overflow-hidden">
-              <div className="h-1 bg-[#151515] dark:bg-white rounded-full" style={{ width: `${pct}%` }} />
+            <div className="flex-1 h-1.5 bg-black/[0.05] dark:bg-white/[0.08] rounded-full overflow-hidden">
+              <div className="h-1.5 bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full transition-all duration-300" style={{ width: `${pct}%` }} />
             </div>
-            <span className="text-[10px] font-mono text-[#737373] dark:text-[#a3a3a3] tabular-nums flex-shrink-0">{pct}% match</span>
+            <span className="text-[10.5px] font-mono text-violet-600 dark:text-violet-400 font-semibold tabular-nums flex-shrink-0">{pct}% match</span>
           </div>
         </div>
         {expanded ? <ChevronUp className="size-3.5 text-[#a3a3a3] flex-shrink-0" /> : <ChevronDown className="size-3.5 text-[#a3a3a3] flex-shrink-0" />}
       </button>
       {expanded && (
-        <div className="px-3 pb-3 pt-0 border-t border-[#e5e5e5] dark:border-white/[0.06]">
-          <p className="text-xs text-[#737373] dark:text-[#a3a3a3] leading-relaxed font-sans mt-2 bg-[#fafafa] dark:bg-[#1a1a1e] p-2.5 rounded-lg border border-[#e5e5e5] dark:border-white/[0.04]">
+        <div className="px-3 pb-3 pt-0 border-t border-black/[0.05] dark:border-white/[0.06]">
+          <p className="text-xs text-[#525252] dark:text-[#a3a3a3] leading-relaxed font-body mt-2 bg-black/[0.02] dark:bg-white/[0.03] p-2.5 rounded-lg border border-black/[0.04] dark:border-white/[0.04] whitespace-pre-wrap">
             {citation.snippet}
           </p>
         </div>
@@ -343,7 +351,7 @@ const MessageItem: React.FC<{
   if (isUser) {
     return (
       <div className="flex flex-col items-end max-w-3xl mx-auto w-full group">
-        <div className="max-w-[90%] sm:max-w-[75%] bg-[#151515] text-white dark:bg-[#1f1f23] dark:text-[#f4f4f5] rounded-2xl rounded-tr-xs px-3.5 sm:px-4 py-2.5 text-sm leading-relaxed shadow-2xs break-words">
+        <div className="max-w-[90%] sm:max-w-[75%] bg-gradient-to-br from-[#1c1c22] to-[#111116] text-white dark:from-[#20202a] dark:to-[#16161f] border border-white/10 rounded-2xl rounded-tr-xs px-4 py-2.5 text-sm leading-relaxed shadow-[0_4px_16px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.15)_inset] break-words">
           <p className="whitespace-pre-wrap">{message.content}</p>
         </div>
         {timeStr && (
@@ -455,7 +463,7 @@ const MessageItem: React.FC<{
 
         {/* State 2 & 3: Streaming or Completed Content */}
         {(isStreamingWithContent || isCompleted) && (
-          <div className="bg-[#fafafa]/90 dark:bg-[#141416]/90 border border-[#e5e5e5] dark:border-white/[0.06] rounded-2xl rounded-tl-xs p-3.5 sm:p-4 shadow-2xs">
+          <div className="bg-white/80 dark:bg-[#13131b]/85 backdrop-blur-xl border border-black/[0.06] dark:border-white/[0.08] rounded-2xl rounded-tl-xs p-4 sm:p-5 shadow-[0_4px_24px_rgba(0,0,0,0.03),0_1px_0_rgba(255,255,255,0.9)_inset] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4),0_1px_0_rgba(255,255,255,0.06)_inset]">
             <MarkdownContent content={message.content} isStreaming={message.isStreaming} />
           </div>
         )}
@@ -582,6 +590,8 @@ export const ChatView: React.FC = () => {
     updateLastMessageContent,
     updateMessageMetadata,
   } = useConversationStore();
+
+  const { token, user, openAuthModal, closeAuthModal, pendingPrompt, setPendingPrompt } = useAuthStore();
 
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -715,6 +725,14 @@ export const ChatView: React.FC = () => {
   /* ── Send Dispatcher ── */
   const sendMessage = useCallback(async (question: string) => {
     if (!question.trim() || isLoading || isStreaming) return;
+
+    // Check authentication: if not logged in, prompt user to log in first!
+    if (!token || !user) {
+      const trimmed = question.trim();
+      openAuthModal(trimmed);
+      return;
+    }
+
     setShowTemplates(false);
 
     const convId = activeConversationId || crypto.randomUUID();
@@ -736,7 +754,23 @@ export const ChatView: React.FC = () => {
       await sendNormal(question.trim(), convId);
     }
     inputRef.current?.focus();
-  }, [isLoading, isStreaming, activeConversationId, streamingMode, appendMessage, sendStreaming, sendNormal]);
+  }, [token, user, openAuthModal, isLoading, isStreaming, activeConversationId, streamingMode, appendMessage, sendStreaming, sendNormal]);
+
+  // Auto-send pending prompt once the user logs in
+  useEffect(() => {
+    if (token && user) {
+      const saved = pendingPrompt || (typeof window !== 'undefined' ? sessionStorage.getItem('docmind_pending_prompt') : null);
+      if (saved && saved.trim()) {
+        sessionStorage.removeItem('docmind_pending_prompt');
+        setPendingPrompt(null);
+        closeAuthModal();
+        const timer = setTimeout(() => {
+          sendMessage(saved.trim());
+        }, 120);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [token, user, pendingPrompt, sendMessage, setPendingPrompt, closeAuthModal]);
 
   const stopStream = () => {
     abortRef.current?.abort();
@@ -863,7 +897,7 @@ export const ChatView: React.FC = () => {
                 <button
                   key={item.label}
                   onClick={() => sendMessage(item.prompt)}
-                  className="text-left p-2.5 rounded-xl bg-white/75 hover:bg-white dark:bg-[#141416]/75 dark:hover:bg-[#1a1a1f] backdrop-blur-md border border-[#e5e5e5]/80 hover:border-[#8b5cf6]/30 dark:border-white/[0.08] dark:hover:border-[#8b5cf6]/40 transition-all group cursor-pointer shadow-2xs active:scale-[0.99]"
+                  className="text-left p-2.5 rounded-xl bg-white/75 hover:bg-white dark:bg-[#141416]/75 dark:hover:bg-[#1a1a1f] backdrop-blur-md border border-[#e5e5e5] hover:border-neutral-300 dark:border-white/[0.08] dark:hover:border-white/[0.16] transition-colors duration-150 group cursor-pointer shadow-2xs active:scale-[0.99]"
                 >
                   <div className="flex items-center justify-between text-xs font-medium text-[#171717] dark:text-[#f4f4f5] mb-0.5">
                     <span>{item.label}</span>
@@ -888,7 +922,7 @@ export const ChatView: React.FC = () => {
                       <button
                         key={item.label}
                         onClick={() => sendMessage(item.prompt)}
-                        className="text-left p-2.5 rounded-xl bg-white/75 hover:bg-white dark:bg-[#141416]/75 dark:hover:bg-[#1a1a1f] backdrop-blur-md border border-[#e5e5e5]/80 hover:border-[#8b5cf6]/30 dark:border-white/[0.08] dark:hover:border-[#8b5cf6]/40 transition-all group cursor-pointer shadow-2xs"
+                        className="text-left p-2.5 rounded-xl bg-white/75 hover:bg-white dark:bg-[#141416]/75 dark:hover:bg-[#1a1a1f] backdrop-blur-md border border-[#e5e5e5] hover:border-neutral-300 dark:border-white/[0.08] dark:hover:border-white/[0.16] transition-colors duration-150 group cursor-pointer shadow-2xs"
                       >
                         <div className="flex items-center justify-between text-xs font-medium text-[#171717] dark:text-[#f4f4f5] mb-0.5">
                           <span>{item.label}</span>
@@ -990,9 +1024,9 @@ export const ChatView: React.FC = () => {
                 {isStreaming ? (
                   <button
                     onClick={stopStream}
-                    className="flex items-center gap-1.5 h-8 px-3 rounded-xl bg-[#151515] text-white dark:bg-white dark:text-[#151515] text-xs font-medium hover:opacity-90 active:scale-[0.96] transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-1.5 h-8 px-3 rounded-xl bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white text-xs font-medium transition-colors duration-150 ease-in-out cursor-pointer shadow-2xs"
                   >
-                    <Square className="size-2.5 fill-current" />
+                    <Square className="size-2.5 fill-current text-white" />
                     <span>Stop</span>
                   </button>
                 ) : (
@@ -1000,14 +1034,14 @@ export const ChatView: React.FC = () => {
                     onClick={() => sendMessage(input)}
                     disabled={!input.trim() || isBusy}
                     className={cn(
-                      'size-8 rounded-xl flex items-center justify-center transition-all cursor-pointer active:scale-95',
+                      'size-8 rounded-xl flex items-center justify-center cursor-pointer',
                       input.trim() && !isBusy
-                        ? 'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100 shadow-2xs'
-                        : 'bg-[#f0f0f0] dark:bg-white/[0.06] text-[#a3a3a3] cursor-not-allowed'
+                        ? 'bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white transition-colors duration-150 ease-in-out shadow-2xs'
+                        : 'bg-[#f0f0f0] dark:bg-white/[0.06] text-[#a3a3a3] cursor-not-allowed transition-colors duration-150 ease-in-out'
                     )}
                     aria-label="Send message"
                   >
-                    {isLoading ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
+                    {isLoading ? <Loader2 className="size-3.5 animate-spin text-white" /> : <Send className={cn("size-3.5", input.trim() && !isBusy ? "text-white" : "")} />}
                   </button>
                 )}
               </div>

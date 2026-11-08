@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 import { useDocumentStore } from './store/documentStore';
 import { useConversationStore } from './store/conversationStore';
 import { useAuthStore } from './store/authStore';
@@ -12,8 +12,8 @@ import SearchView from './components/SearchView';
 import ChunksView from './components/ChunksView';
 import UploadDialog from './components/UploadDialog';
 import MobileBottomNav from './components/MobileBottomNav';
-import ProtectedRoute from './components/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { AuthModal } from './components/AuthModal';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
@@ -22,7 +22,20 @@ const Dashboard: React.FC = () => {
   const { loadChats } = useConversationStore();
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
+  const isAuthModalOpen = useAuthStore((state) => state.isAuthModalOpen);
+  const pendingPrompt = useAuthStore((state) => state.pendingPrompt);
+  const openAuthModal = useAuthStore((state) => state.openAuthModal);
+  const closeAuthModal = useAuthStore((state) => state.closeAuthModal);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+
+  const handleUploadClick = () => {
+    if (!token || !user) {
+      toast('Please sign in to upload documents', { icon: '🔒' });
+      openAuthModal();
+      return;
+    }
+    setIsUploadOpen(true);
+  };
 
   // Responsive sidebar: open on desktop, strictly closed on mobile so homepage is shown first
   useEffect(() => {
@@ -56,14 +69,20 @@ const Dashboard: React.FC = () => {
   }, [token, user, fetchDocuments, loadChats]);
 
   return (
-    <div className="flex flex-col h-dvh overflow-hidden bg-white dark:bg-[#0c0c0e] text-[#171717] dark:text-[#f4f4f5] selection:bg-neutral-200 dark:selection:bg-neutral-800">
-      <Navbar onUploadClick={() => setIsUploadOpen(true)} />
+    <div className="relative flex flex-col h-dvh overflow-hidden bg-[#fafafa] dark:bg-[#08080d] text-[#1c1c1c] dark:text-[#ededf2] selection:bg-violet-500/25 selection:text-current">
+      {/* Ambient Atmospheric Lighting Orbs (Inspired by PersonalPortfolio Parallax architecture) */}
+      <div className="hidden md:block pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[700px] h-[700px] rounded-full bg-gradient-to-br from-violet-500/7 to-indigo-500/7 dark:from-violet-500/10 dark:to-purple-500/10 blur-[130px] opacity-70" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[650px] h-[650px] rounded-full bg-gradient-to-tl from-indigo-500/7 to-blue-500/7 dark:from-indigo-500/8 dark:to-cyan-500/8 blur-[130px] opacity-60" />
+      </div>
 
-      <div className="flex flex-1 overflow-hidden relative">
-        <Sidebar onUploadClick={() => setIsUploadOpen(true)} />
+      <Navbar onUploadClick={handleUploadClick} />
+
+      <div className="flex flex-1 overflow-hidden relative z-10">
+        <Sidebar onUploadClick={handleUploadClick} />
 
         {/* Main application workspace */}
-        <main className="flex-1 overflow-hidden relative flex flex-col bg-white dark:bg-[#0c0c0e]">
+        <main className="flex-1 overflow-hidden relative flex flex-col bg-white/40 dark:bg-[#08080d]/40 backdrop-blur-xs">
           {activeTab === 'chat' && <ChatView />}
           {activeTab === 'search' && <SearchView />}
           {activeTab === 'chunks' && <ChunksView />}
@@ -74,6 +93,13 @@ const Dashboard: React.FC = () => {
       <MobileBottomNav />
 
       <UploadDialog isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} />
+
+      {/* Global Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={closeAuthModal}
+        pendingPrompt={pendingPrompt}
+      />
     </div>
   );
 };
@@ -90,11 +116,9 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Protected Application Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/*" element={<Navigate to="/" replace />} />
-          </Route>
+          {/* Main Application - Open to visitors, prompts authentication upon sending chat */}
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/*" element={<Navigate to="/" replace />} />
         </Routes>
 
         <Toaster

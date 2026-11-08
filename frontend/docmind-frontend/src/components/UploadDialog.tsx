@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { motion } from 'framer-motion';
 import {
-  X, Upload, CheckCircle2, AlertCircle, Loader2, Plus, Trash2
+  X, CheckCircle2, AlertCircle, Loader2, Plus, Trash2
 } from 'lucide-react';
 import { documentApi } from '../services/api';
 import { useDocumentStore } from '../store/documentStore';
@@ -100,12 +101,12 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
       <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-xs" onClick={handleClose} />
 
       {/* Dialog */}
-      <div className="relative z-10 w-full max-w-lg max-h-[92dvh] flex flex-col bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative z-10 w-full max-w-lg max-h-[92dvh] flex flex-col glass-panel rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7)] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-3.5 border-b border-[#e5e5e5] dark:border-white/[0.08] flex-shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="size-7 bg-[#f5f5f5] dark:bg-white/[0.08] border border-[#e5e5e5] dark:border-white/[0.1] rounded-lg flex items-center justify-center">
-              <Upload className="size-3.5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />
+              <img src="/icons/UploadToCloud.png" alt="Upload" className="size-4 object-contain" />
             </div>
             <div>
               <h2 className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight">Upload documents</h2>
@@ -135,9 +136,29 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
           >
             <input {...getInputProps()} />
             <div className="flex flex-col items-center gap-2">
-              <div className="size-9 sm:size-10 rounded-xl bg-white dark:bg-[#18181c] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-center shadow-2xs">
-                <Upload className="size-4 sm:size-4.5 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.5} />
-              </div>
+              <motion.div
+                animate={{
+                  y: isDragActive ? -3 : [-1.5, 2, -1.5],
+                  scale: isDragActive ? 1.08 : 1,
+                }}
+                transition={{
+                  y: isDragActive
+                    ? { type: 'spring', stiffness: 300, damping: 15 }
+                    : { repeat: Infinity, duration: 3, ease: 'easeInOut' },
+                  scale: { type: 'spring', stiffness: 300, damping: 15 },
+                }}
+                className="size-11 sm:size-12 rounded-2xl bg-white dark:bg-[#18181c] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-center shadow-2xs"
+              >
+                <img
+                  loading="lazy"
+                  src="/icons/UploadToCloud.png"
+                  alt="Upload to Cloud"
+                  className={cn(
+                    'size-7 sm:size-8 object-contain drop-shadow-xs transition-opacity duration-300',
+                    isDragActive ? 'opacity-100 scale-105' : 'opacity-85'
+                  )}
+                />
+              </motion.div>
               <div>
                 <p className="text-xs font-medium text-[#171717] dark:text-[#f4f4f5]">
                   {isDragActive ? 'Drop files here' : 'Tap to select documents'}
@@ -239,16 +260,16 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
               onClick={handleUpload}
               disabled={isUploading || pendingCount === 0}
               className={cn(
-                'flex-1 sm:flex-initial h-9 flex items-center justify-center gap-1.5 px-4 text-xs font-medium rounded-xl transition-all border shadow-2xs cursor-pointer active:scale-95',
+                'flex-1 sm:flex-initial h-9 flex items-center justify-center gap-1.5 px-4 text-xs font-medium rounded-xl border shadow-2xs cursor-pointer',
                 !isUploading && pendingCount > 0
-                  ? 'bg-[#151515] text-white hover:bg-black border-transparent dark:bg-white dark:text-[#151515] dark:hover:bg-neutral-100'
-                  : 'bg-[#f5f5f5] dark:bg-white/[0.04] text-[#a3a3a3] border-transparent cursor-not-allowed'
+                  ? 'bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white border-transparent transition-colors duration-150 ease-in-out'
+                  : 'bg-[#f5f5f5] dark:bg-white/[0.04] text-[#a3a3a3] border-transparent cursor-not-allowed transition-colors duration-150 ease-in-out'
               )}
             >
               {isUploading ? (
-                <><Loader2 className="size-3.5 animate-spin" /> Ingesting…</>
+                <><Loader2 className="size-3.5 animate-spin text-white" /> Ingesting…</>
               ) : (
-                <><Plus className="size-3.5" /> Upload {pendingCount > 0 && `(${pendingCount})`}</>
+                <><Plus className="size-3.5 text-white" /> Upload {pendingCount > 0 && `(${pendingCount})`}</>
               )}
             </button>
           )}

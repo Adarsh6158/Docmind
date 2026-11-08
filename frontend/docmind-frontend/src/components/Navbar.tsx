@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  MessageSquare, Search, Database, Upload, PanelLeft,
-  LogOut, Shield, ChevronDown, X
+  Upload, PanelLeft, LogOut, Shield, ChevronDown, X
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useNavigate, Link } from 'react-router-dom';
 import { useDocumentStore } from '../store/documentStore';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../lib/utils';
@@ -25,16 +25,16 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
     selectedDocumentId,
     setSelectedDocumentId
   } = useDocumentStore();
-  const { user, logout } = useAuthStore();
+  const { user, token, logout, openAuthModal } = useAuthStore();
   const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const tabs: { id: 'chat' | 'search' | 'chunks'; label: string; icon: React.FC<{ className?: string; strokeWidth?: number }> }[] = [
-    { id: 'chat', label: 'Chat', icon: MessageSquare },
-    { id: 'search', label: 'Search', icon: Search },
-    { id: 'chunks', label: 'Chunks', icon: Database },
+  const tabs: { id: 'chat' | 'search' | 'chunks'; label: string; iconSrc: string }[] = [
+    { id: 'chat', label: 'Chat', iconSrc: '/icons/chat.png' },
+    { id: 'search', label: 'Search', iconSrc: '/icons/search.png' },
+    { id: 'chunks', label: 'Chunks', iconSrc: '/icons/chunks.png' },
   ];
 
   const selectedDoc = documents.find((d) => d.id === selectedDocumentId);
@@ -51,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login', { replace: true });
+    navigate('/', { replace: true });
   };
 
   const getInitials = (name?: string) => {
@@ -86,20 +86,31 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
       {/* Center: segmented navigation (desktop only - mobile uses dedicated bottom nav) */}
       <nav className="hidden md:flex items-center">
         <div className="flex items-center gap-0.5 bg-[#f5f5f5] dark:bg-[#1c1c20] border border-[#e5e5e5]/80 dark:border-white/[0.06] rounded-lg p-0.5 shadow-2xs">
-          {tabs.map(({ id, label, icon: Icon }) => {
+          {tabs.map(({ id, label, iconSrc }) => {
             const isActive = activeTab === id;
             return (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
                 className={cn(
-                  'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer',
+                  'group flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer',
                   isActive
                     ? 'bg-white dark:bg-[#28282d] text-[#171717] dark:text-[#f4f4f5] shadow-2xs border border-black/[0.04] dark:border-white/[0.08]'
                     : 'text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] hover:bg-black/[0.02] dark:hover:bg-white/[0.04]'
                 )}
               >
-                <Icon className="size-3.5" strokeWidth={isActive ? 2 : 1.75} />
+                <motion.div
+                  whileHover={{ scale: 1.15 }}
+                  whileTap={{ scale: 0.92 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className="size-3.5 flex items-center justify-center flex-shrink-0"
+                >
+                  <img
+                    src={iconSrc}
+                    alt={label}
+                    className="size-3.5 object-contain select-none pointer-events-none drop-shadow-xs"
+                  />
+                </motion.div>
                 <span>{label}</span>
               </button>
             );
@@ -132,62 +143,72 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
           onClick={onUploadClick}
           className={cn(
             'flex items-center justify-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-lg text-xs font-medium',
-            'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98] transition-all cursor-pointer',
+            'bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white transition-colors duration-150 ease-in-out cursor-pointer',
             'shadow-2xs'
           )}
           title="Upload document"
           aria-label="Upload document"
         >
-          <Upload className="size-3.5" strokeWidth={2} />
-          <span className="hidden sm:inline">Upload</span>
+          <Upload className="size-3.5 text-white" strokeWidth={2} />
+          <span className="hidden sm:inline text-white">Upload</span>
         </button>
 
-        {/* User Dropdown */}
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={cn(
-              'flex items-center gap-1.5 sm:gap-2 h-8 pl-1 pr-1.5 sm:pr-2 bg-[#f5f5f5] hover:bg-[#efefef] dark:bg-[#1c1c20] dark:hover:bg-white/[0.08]',
-              'border border-[#e5e5e5] dark:border-white/[0.08] rounded-lg transition-colors cursor-pointer group'
-            )}
-            aria-label="User menu"
-          >
-            <div className="size-6 rounded-md bg-[#e5e5e5] dark:bg-white/[0.1] flex items-center justify-center text-[10px] font-semibold text-[#171717] dark:text-[#f4f4f5]">
-              {getInitials(user?.username)}
-            </div>
-            <span className="text-xs text-[#171717] dark:text-[#f4f4f5] font-medium max-w-[80px] truncate hidden sm:block">
-              {user?.username || 'User'}
-            </span>
-            <ChevronDown className={cn('size-3 text-[#737373] dark:text-[#a3a3a3] transition-transform duration-150', isMenuOpen && 'rotate-180')} />
-          </button>
+        {/* User Dropdown or Sign In */}
+        {token && user ? (
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={cn(
+                'flex items-center gap-1.5 sm:gap-2 h-8 pl-1 pr-1.5 sm:pr-2 bg-[#f5f5f5] hover:bg-[#efefef] dark:bg-[#1c1c20] dark:hover:bg-white/[0.08]',
+                'border border-[#e5e5e5] dark:border-white/[0.08] rounded-lg transition-colors cursor-pointer group'
+              )}
+              aria-label="User menu"
+            >
+              <div className="size-6 rounded-md bg-[#e5e5e5] dark:bg-white/[0.1] flex items-center justify-center text-[10px] font-semibold text-[#171717] dark:text-[#f4f4f5]">
+                {getInitials(user?.username)}
+              </div>
+              <span className="text-xs text-[#171717] dark:text-[#f4f4f5] font-medium max-w-[80px] truncate hidden sm:block">
+                {user?.username || 'User'}
+              </span>
+              <ChevronDown className={cn('size-3 text-[#737373] dark:text-[#a3a3a3] transition-transform duration-150', isMenuOpen && 'rotate-180')} />
+            </button>
 
-          {isMenuOpen && (
-            <div className="absolute right-0 mt-1.5 w-54 max-w-[calc(100vw-24px)] bg-white dark:bg-[#18181b] border border-[#e5e5e5] dark:border-white/[0.1] rounded-xl shadow-xl py-1 z-50">
-              <div className="px-3.5 py-2.5 border-b border-[#e5e5e5] dark:border-white/[0.06]">
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-xs font-semibold text-[#171717] dark:text-[#f4f4f5] truncate">{user?.username}</p>
-                  {user?.role && (
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-[#f5f5f5] dark:bg-white/[0.06] text-[#737373] dark:text-[#a3a3a3] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center gap-1 capitalize">
-                      <Shield className="size-2.5" />
-                      {user.role.toLowerCase()}
-                    </span>
-                  )}
+            {isMenuOpen && (
+              <div className="absolute right-0 mt-1.5 w-54 max-w-[calc(100vw-24px)] bg-white dark:bg-[#18181b] border border-[#e5e5e5] dark:border-white/[0.1] rounded-xl shadow-xl py-1 z-50">
+                <div className="px-3.5 py-2.5 border-b border-[#e5e5e5] dark:border-white/[0.06]">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-xs font-semibold text-[#171717] dark:text-[#f4f4f5] truncate">{user?.username}</p>
+                    {user?.role && (
+                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-[#f5f5f5] dark:bg-white/[0.06] text-[#737373] dark:text-[#a3a3a3] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center gap-1 capitalize">
+                        <Shield className="size-2.5" />
+                        {user.role.toLowerCase()}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-[#737373] dark:text-[#a3a3a3] truncate">{user?.email}</p>
                 </div>
-                <p className="text-[11px] text-[#737373] dark:text-[#a3a3a3] truncate">{user?.email}</p>
-              </div>
 
-              <div className="p-1">
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
-                >
-                  <LogOut className="size-3.5" strokeWidth={1.75} />
-                  <span>Log out</span>
-                </button>
+                <div className="p-1">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <LogOut className="size-3.5" strokeWidth={1.75} />
+                    <span>Log out</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => openAuthModal()}
+            className="flex items-center justify-center h-8 px-3 rounded-lg text-xs font-medium bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white transition-colors duration-150 ease-in-out cursor-pointer shadow-2xs"
+          >
+            Sign in
+          </button>
+        )}
       </div>
     </header>
   );

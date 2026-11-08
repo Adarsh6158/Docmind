@@ -1,5 +1,4 @@
 import React from 'react';
-import { MessageSquare, Search, Database, Files } from 'lucide-react';
 import { useDocumentStore } from '../store/documentStore';
 import { cn } from '../lib/utils';
 
@@ -29,28 +28,28 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onDocsClick })
     {
       id: 'chat' as const,
       label: 'Chat',
-      icon: MessageSquare,
+      iconSrc: '/icons/chats.gif',
       isActive: activeTab === 'chat' && !isSidebarOpen,
       onClick: () => handleTabClick('chat'),
     },
     {
       id: 'search' as const,
       label: 'Search',
-      icon: Search,
+      iconSrc: '/icons/search.png',
       isActive: activeTab === 'search' && !isSidebarOpen,
       onClick: () => handleTabClick('search'),
     },
     {
       id: 'chunks' as const,
       label: 'Chunks',
-      icon: Database,
+      iconSrc: '/icons/chunks.png',
       isActive: activeTab === 'chunks' && !isSidebarOpen,
       onClick: () => handleTabClick('chunks'),
     },
     {
       id: 'docs' as const,
       label: 'Docs',
-      icon: Files,
+      iconSrc: '/icons/docs.png',
       badge: documents.length > 0 ? documents.length : undefined,
       isActive: isSidebarOpen,
       onClick: handleDocsToggle,
@@ -64,7 +63,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onDocsClick })
       aria-label="Mobile Navigation"
     >
       <div className="flex items-center justify-around px-2 py-1">
-        {navItems.map(({ id, label, icon: Icon, badge, isActive, onClick }) => (
+        {navItems.map(({ id, label, iconSrc, badge, isActive, onClick }) => (
           <button
             key={id}
             onClick={onClick}
@@ -81,18 +80,25 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onDocsClick })
               className={cn(
                 'relative flex items-center justify-center size-7 rounded-lg transition-all',
                 isActive
-                  ? 'bg-[#151515] text-white dark:bg-white dark:text-[#151515] shadow-xs'
+                  ? 'bg-black/[0.05] dark:bg-white/[0.08] shadow-2xs'
                   : 'bg-transparent'
               )}
             >
-              <Icon className="size-4" strokeWidth={isActive ? 2.25 : 1.75} />
+              <img
+                src={iconSrc}
+                alt={label}
+                className={cn(
+                  'size-5 object-contain transition-transform duration-200',
+                  isActive ? 'scale-110 drop-shadow-xs' : 'opacity-85'
+                )}
+              />
               {badge !== undefined && (
                 <span
                   className={cn(
-                    'absolute -top-1 -right-1.5 min-w-[15px] h-[15px] px-1 rounded-full text-[9px] font-mono tabular-nums font-semibold flex items-center justify-center',
+                    'absolute -top-1 -right-1.5 min-w-[15px] h-[15px] px-1 rounded-full text-[9px] font-sans font-medium flex items-center justify-center',
                     isActive
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-[#151515] text-white dark:bg-white dark:text-[#151515]'
+                      ? 'bg-[#151515] text-white dark:bg-white dark:text-[#151515]'
+                      : 'bg-[#737373] text-white dark:bg-[#a3a3a3] dark:text-[#151515]'
                   )}
                 >
                   {badge}
@@ -101,8 +107,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onDocsClick })
             </div>
             <span
               className={cn(
-                'text-[10px] font-medium tracking-tight mt-0.5 font-sans',
-                isActive ? 'font-semibold text-[#151515] dark:text-white' : 'opacity-80'
+                'text-[10px] tracking-tight mt-0.5 font-sans',
+                isActive ? 'font-semibold text-[#151515] dark:text-white' : 'font-medium opacity-80'
               )}
             >
               {label}

@@ -101,10 +101,10 @@ const DocumentItem: React.FC<{ doc: DocumentMetadataDto }> = ({ doc }) => {
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.12 }}
       className={cn(
-        'rounded-xl transition-all overflow-hidden border',
+        'rounded-xl transition-all duration-200 overflow-hidden border',
         isSelected
-          ? 'border-[#151515] dark:border-white/30 border-l-3 border-l-[#151515] dark:border-l-white bg-white dark:bg-[#18181c] shadow-2xs'
-          : 'border-[#e5e5e5] dark:border-white/[0.06] bg-white dark:bg-[#141416] hover:border-neutral-300 dark:hover:border-white/[0.12]'
+          ? 'border-violet-500/50 dark:border-violet-500/60 bg-violet-50/50 dark:bg-violet-950/25 shadow-[0_4px_16px_rgba(139,92,246,0.12),0_1px_0_rgba(255,255,255,0.8)_inset] dark:shadow-[0_4px_16px_rgba(139,92,246,0.2),0_1px_0_rgba(255,255,255,0.06)_inset]'
+          : 'border-black/[0.06] dark:border-white/[0.08] bg-white/70 dark:bg-[#13131b]/70 backdrop-blur-md hover:border-black/[0.12] dark:hover:border-white/[0.16] shadow-[0_2px_10px_rgba(0,0,0,0.02),0_1px_0_rgba(255,255,255,0.85)_inset] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3),0_1px_0_rgba(255,255,255,0.06)_inset] hover:shadow-xs'
       )}
     >
       {/* Main item row */}
@@ -265,15 +265,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
               onClick={() => setSidebarTab('documents')}
               aria-label="View uploaded documents"
               className={cn(
-                'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer',
+                'group flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer',
                 sidebarTab === 'documents'
                   ? 'bg-white dark:bg-[#25252b] text-[#171717] dark:text-[#f4f4f5] shadow-2xs border border-black/[0.04] dark:border-white/[0.08]'
                   : 'text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5]'
               )}
             >
-              <Files className="size-3.5" strokeWidth={1.75} />
+              <motion.div
+                whileHover={{ scale: 1.15, rotate: -4 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                className="flex items-center justify-center size-4 flex-shrink-0"
+              >
+                <img
+                  src="/icons/docs.png"
+                  alt="Docs"
+                  className="size-4 object-contain select-none pointer-events-none drop-shadow-xs"
+                />
+              </motion.div>
               <span>Docs</span>
-              <span className="text-[10px] font-mono tabular-nums text-[#737373] dark:text-[#a3a3a3] bg-[#f5f5f5] dark:bg-[#101013] px-1 rounded">
+              <span className="text-[11px] font-sans font-medium text-[#737373] dark:text-[#a3a3a3] bg-[#f0f0f0] dark:bg-[#1c1c20] px-1.5 py-0.5 rounded-full leading-none">
                 {documents.length}
               </span>
             </button>
@@ -282,15 +293,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
               onClick={() => setSidebarTab('chats')}
               aria-label="View chat history"
               className={cn(
-                'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer',
+                'group flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer',
                 sidebarTab === 'chats'
                   ? 'bg-white dark:bg-[#25252b] text-[#171717] dark:text-[#f4f4f5] shadow-2xs border border-black/[0.04] dark:border-white/[0.08]'
                   : 'text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5]'
               )}
             >
-              <MessagesSquare className="size-3.5" strokeWidth={1.75} />
+              <motion.div
+                whileHover={{ scale: 1.15, rotate: 4 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                className="flex items-center justify-center size-4 flex-shrink-0"
+              >
+                <img
+                  src="/icons/chats.gif"
+                  alt="Chats"
+                  className="size-4 object-contain select-none pointer-events-none drop-shadow-xs"
+                />
+              </motion.div>
               <span>Chats</span>
-              <span className="text-[10px] font-mono tabular-nums text-[#737373] dark:text-[#a3a3a3] bg-[#f5f5f5] dark:bg-[#101013] px-1 rounded">
+              <span className="text-[11px] font-sans font-medium text-[#737373] dark:text-[#a3a3a3] bg-[#f0f0f0] dark:bg-[#1c1c20] px-1.5 py-0.5 rounded-full leading-none">
                 {conversations.length}
               </span>
             </button>
@@ -352,7 +374,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
               ) : documents.length === 0 ? (
                 <div className="p-4 my-2 rounded-2xl border border-dashed border-[#e5e5e5] dark:border-white/[0.08] bg-white/60 dark:bg-[#141416]/40 text-center flex flex-col items-center">
                   <div className="size-9 rounded-xl bg-[#f5f5f5] dark:bg-white/[0.06] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-center mb-2.5 shadow-2xs">
-                    <Files className="size-4 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.5} />
+                    <img src="/icons/Docs.gif" alt="Docs" className="size-5 object-contain" />
                   </div>
                   <p className="text-xs font-semibold text-[#171717] dark:text-[#f4f4f5]">No indexed documents</p>
                   <p className="text-[11px] text-[#737373] dark:text-[#a3a3a3] mt-1 leading-relaxed max-w-[200px]">
@@ -360,9 +382,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
                   </p>
                   <button
                     onClick={onUploadClick}
-                    className="mt-3.5 inline-flex items-center gap-1.5 h-7 px-3 rounded-lg bg-[#151515] text-white hover:bg-black dark:bg-white dark:text-[#151515] dark:hover:bg-neutral-100 text-xs font-medium transition-all active:scale-[0.98] cursor-pointer shadow-2xs"
+                    className="mt-3.5 inline-flex items-center gap-1.5 h-7 px-3 rounded-lg bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white text-xs font-medium transition-colors duration-150 ease-in-out cursor-pointer shadow-2xs"
                   >
-                    <Upload className="size-3" strokeWidth={2} />
+                    <Upload className="size-3 text-white" strokeWidth={2} />
                     <span>Upload document</span>
                   </button>
                   <div className="flex flex-wrap gap-1.5 justify-center mt-3 pt-2.5 border-t border-[#f0f0f0] dark:border-white/[0.04] w-full">

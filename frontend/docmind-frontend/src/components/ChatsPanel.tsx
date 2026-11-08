@@ -119,10 +119,10 @@ const ChatItem: React.FC<{
       transition={{ duration: 0.12 }}
       onClick={isEditing ? undefined : onSelect}
       className={cn(
-        'group relative flex items-center justify-between gap-2 p-2 rounded-xl border transition-all cursor-pointer select-none',
+        'group relative flex items-center justify-between gap-2 p-2 rounded-xl border transition-all duration-200 cursor-pointer select-none',
         isActive
-          ? 'border-[#151515] dark:border-white/[0.25] bg-white dark:bg-[#18181c] shadow-2xs text-[#171717] dark:text-[#f4f4f5]'
-          : 'border-[#e5e5e5] dark:border-white/[0.05] bg-white dark:bg-[#141416] hover:border-neutral-300 dark:hover:border-white/[0.1] text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5]'
+          ? 'border-violet-500/50 dark:border-violet-500/60 bg-violet-50/50 dark:bg-violet-950/25 shadow-[0_4px_16px_rgba(139,92,246,0.12),0_1px_0_rgba(255,255,255,0.8)_inset] dark:shadow-[0_4px_16px_rgba(139,92,246,0.2),0_1px_0_rgba(255,255,255,0.06)_inset] text-[#171717] dark:text-[#f4f4f5]'
+          : 'border-black/[0.06] dark:border-white/[0.08] bg-white/70 dark:bg-[#13131b]/70 backdrop-blur-md hover:border-black/[0.12] dark:hover:border-white/[0.16] shadow-[0_2px_10px_rgba(0,0,0,0.02),0_1px_0_rgba(255,255,255,0.85)_inset] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3),0_1px_0_rgba(255,255,255,0.06)_inset] text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5]'
       )}
     >
       <div className="flex items-start gap-2 min-w-0 flex-1">
@@ -134,7 +134,7 @@ const ChatItem: React.FC<{
               : 'bg-[#fafafa] dark:bg-[#1a1a1e] text-[#a3a3a3] group-hover:text-[#171717] dark:group-hover:text-[#f4f4f5]'
           )}
         >
-          <MessageSquare className="size-3.5" strokeWidth={1.75} />
+          <img src="/icons/chat.png" alt="" className="size-3.5 object-contain" />
         </div>
 
         <div className="flex-1 min-w-0">
@@ -271,15 +271,15 @@ export const ChatsPanel: React.FC = () => {
           onClick={handleNewChat}
           className={cn(
             'w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium',
-            'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100',
-            'active:scale-[0.98] transition-all shadow-2xs cursor-pointer'
+            'bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white',
+            'transition-colors duration-150 ease-in-out shadow-2xs cursor-pointer'
           )}
         >
           <div className="flex items-center gap-2">
-            <MessageSquarePlus className="size-3.5" strokeWidth={2} />
+            <MessageSquarePlus className="size-3.5 text-white" strokeWidth={2} />
             <span>New Conversation</span>
           </div>
-          <span className="text-[10px] font-mono opacity-60 hidden sm:inline">⌘K</span>
+          <span className="text-[10px] font-mono text-white/70 hidden sm:inline">⌘K</span>
         </button>
 
         {/* Search Input */}
@@ -314,7 +314,7 @@ export const ChatsPanel: React.FC = () => {
         ) : filteredConversations.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 text-center px-4">
             <div className="size-9 bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.08] rounded-xl flex items-center justify-center mb-2 shadow-2xs">
-              <MessageSquare className="size-4 text-[#a3a3a3]" strokeWidth={1.5} />
+              <img src="/icons/chats.gif" alt="Chats" className="size-5 object-contain" />
             </div>
             <p className="text-xs text-[#171717] dark:text-[#f4f4f5] font-medium">
               {searchQuery ? 'No matching conversations' : 'No conversations yet'}

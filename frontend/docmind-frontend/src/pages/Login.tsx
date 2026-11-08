@@ -82,7 +82,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Auth card */}
-        <div className="bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.08] shadow-xl dark:shadow-2xl dark:shadow-black/70 rounded-2xl p-6 sm:p-8">
+        <div className="glass-panel rounded-2xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
           <form className="space-y-4" onSubmit={handleSubmit} noValidate>
             <div>
               <label htmlFor="login-username" className="block text-xs font-medium text-[#171717] dark:text-[#f4f4f5] mb-1.5">
@@ -156,19 +156,19 @@ const Login: React.FC = () => {
                 disabled={loading}
                 className={cn(
                   'w-full flex justify-center items-center gap-2 py-2 px-4 rounded-xl text-sm font-medium',
-                  'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98] transition-all cursor-pointer shadow-2xs',
-                  'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100'
+                  'bg-[#171717] hover:bg-[#303030] active:bg-[#404040] text-white transition-colors duration-150 ease-in-out cursor-pointer shadow-2xs',
+                  'disabled:opacity-50 disabled:cursor-not-allowed'
                 )}
               >
                 {loading ? (
                   <>
-                    <Loader2 className="size-4 animate-spin" />
+                    <Loader2 className="size-4 animate-spin text-white" />
                     <span>Signing in…</span>
                   </>
                 ) : (
                   <>
                     <span>Continue</span>
-                    <ArrowRight className="size-4" />
+                    <ArrowRight className="size-4 text-white" />
                   </>
                 )}
               </button>
