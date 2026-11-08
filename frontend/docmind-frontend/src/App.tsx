@@ -11,17 +11,42 @@ import ChatView from './components/ChatView';
 import SearchView from './components/SearchView';
 import ChunksView from './components/ChunksView';
 import UploadDialog from './components/UploadDialog';
+import MobileBottomNav from './components/MobileBottomNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
 const Dashboard: React.FC = () => {
-  const { activeTab, fetchDocuments } = useDocumentStore();
+  const { activeTab, fetchDocuments, setIsSidebarOpen } = useDocumentStore();
   const { loadChats } = useConversationStore();
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+
+  // Responsive sidebar: open on desktop, strictly closed on mobile so homepage is shown first
+  useEffect(() => {
+    if (window.innerWidth >= 768) {
+      setIsSidebarOpen(true);
+    } else {
+      setIsSidebarOpen(false);
+    }
+
+    let prevWidth = window.innerWidth;
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      // If crossing into mobile, ensure drawer is closed so homepage is presented
+      if (currentWidth < 768 && prevWidth >= 768) {
+        setIsSidebarOpen(false);
+      } else if (currentWidth >= 768 && prevWidth < 768) {
+        setIsSidebarOpen(true);
+      }
+      prevWidth = currentWidth;
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setIsSidebarOpen]);
 
   useEffect(() => {
     if (token && user) {
@@ -44,6 +69,9 @@ const Dashboard: React.FC = () => {
           {activeTab === 'chunks' && <ChunksView />}
         </main>
       </div>
+
+      {/* Dedicated native mobile bottom tab bar */}
+      <MobileBottomNav />
 
       <UploadDialog isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} />
     </div>

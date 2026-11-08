@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Layers, Lock, User, ArrowRight, Loader2, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { Lock, User, ArrowRight, Loader2, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../lib/utils';
 import ThemeToggle from '../components/ThemeToggle';
+import { DocMindLogo } from '../components/DocMindLogo';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -71,9 +72,7 @@ const Login: React.FC = () => {
       >
         {/* Brand mark */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="size-11 rounded-xl bg-[#f5f5f5] dark:bg-[#18181c] border border-[#e5e5e5] dark:border-white/[0.1] flex items-center justify-center shadow-2xs mb-4">
-            <Layers className="size-5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={2} />
-          </div>
+          <DocMindLogo size={44} className="rounded-2xl shadow-xs mb-4" />
           <h1 className="text-xl font-semibold tracking-tight text-[#171717] dark:text-[#f4f4f5] text-balance">
             Sign in to DocMind
           </h1>
@@ -102,7 +101,7 @@ const Login: React.FC = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
                   className={cn(
-                    'block w-full pl-9 pr-3 py-2 bg-white dark:bg-[#101013] border rounded-xl text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] text-sm transition-colors',
+                    'block w-full pl-9 pr-3 py-2.5 sm:py-2 bg-white dark:bg-[#101013] border rounded-xl text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] text-base sm:text-sm transition-colors font-sans',
                     'focus:outline-none focus:border-[#151515] dark:focus:border-white/30',
                     usernameError ? 'border-rose-500/60' : 'border-[#e5e5e5] dark:border-white/[0.08]'
                   )}
@@ -132,7 +131,7 @@ const Login: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className={cn(
-                    'block w-full pl-9 pr-9 py-2 bg-white dark:bg-[#101013] border rounded-xl text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] text-sm transition-colors',
+                    'block w-full pl-9 pr-9 py-2.5 sm:py-2 bg-white dark:bg-[#101013] border rounded-xl text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] text-base sm:text-sm transition-colors font-sans',
                     'focus:outline-none focus:border-[#151515] dark:focus:border-white/30',
                     passwordError ? 'border-rose-500/60' : 'border-[#e5e5e5] dark:border-white/[0.08]'
                   )}

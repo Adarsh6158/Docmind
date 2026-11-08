@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import {
-  FileText, Trash2, ChevronDown, ChevronUp,
-  Clock, AlertCircle, Loader2,
-  RefreshCw, X, FileType, FilePieChart, File,
-  FolderOpen, MessageSquare, Upload, Plus
+  Files, MessagesSquare, Trash2, ChevronDown, ChevronUp,
+  Clock, AlertCircle, CheckCircle2, Loader2,
+  RefreshCw, X, Upload, Plus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDocumentStore } from '../store/documentStore';
@@ -11,6 +10,8 @@ import { useConversationStore } from '../store/conversationStore';
 import type { DocumentMetadataDto, DocumentStatus } from '../types';
 import ChatsPanel from './ChatsPanel';
 import { cn } from '../lib/utils';
+import { FileFormatIcon } from './FileFormatIcon';
+import { DocMindLogo } from './DocMindLogo';
 
 interface SidebarProps {
   onUploadClick: () => void;
@@ -26,16 +27,9 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function getFileIcon(contentType: string): React.ReactNode {
-  if (contentType.includes('pdf')) return <FileText className="size-3.5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
-  if (contentType.includes('word') || contentType.includes('docx')) return <FileType className="size-3.5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
-  if (contentType.includes('csv')) return <FilePieChart className="size-3.5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
-  return <File className="size-3.5 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.75} />;
-}
-
 const STATUS_CONFIG: Record<DocumentStatus, { icon: React.ReactNode; badgeClass: string; label: string }> = {
   INDEXED: {
-    icon: <span className="size-1.5 rounded-full bg-emerald-500 flex-shrink-0" />,
+    icon: <CheckCircle2 className="size-2.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />,
     badgeClass: 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-500/[0.08] dark:border-emerald-500/20',
     label: 'Indexed',
   },
@@ -77,7 +71,7 @@ const SkeletonDoc: React.FC = () => (
 );
 
 const DocumentItem: React.FC<{ doc: DocumentMetadataDto }> = ({ doc }) => {
-  const { selectedDocumentId, setSelectedDocumentId, deleteDocument } = useDocumentStore();
+  const { selectedDocumentId, setSelectedDocumentId, deleteDocument, setIsSidebarOpen } = useDocumentStore();
   const [expanded, setExpanded] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const isSelected = selectedDocumentId === doc.id;
@@ -89,6 +83,13 @@ const DocumentItem: React.FC<{ doc: DocumentMetadataDto }> = ({ doc }) => {
     } else {
       setConfirmDelete(true);
       setTimeout(() => setConfirmDelete(false), 2500);
+    }
+  };
+
+  const handleSelect = () => {
+    setSelectedDocumentId(isSelected ? null : doc.id);
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
     }
   };
 
@@ -109,7 +110,7 @@ const DocumentItem: React.FC<{ doc: DocumentMetadataDto }> = ({ doc }) => {
       {/* Main item row */}
       <div
         className="flex items-start gap-2.5 p-2.5 cursor-pointer select-none"
-        onClick={() => setSelectedDocumentId(isSelected ? null : doc.id)}
+        onClick={handleSelect}
       >
         <div className={cn(
           'size-7 rounded-lg flex items-center justify-center flex-shrink-0 border transition-colors',
@@ -117,7 +118,7 @@ const DocumentItem: React.FC<{ doc: DocumentMetadataDto }> = ({ doc }) => {
             ? 'bg-[#f5f5f5] dark:bg-white/[0.08] border-[#e5e5e5] dark:border-white/[0.12]'
             : 'bg-[#fafafa] dark:bg-[#1a1a1e] border-[#e5e5e5] dark:border-white/[0.06]'
         )}>
-          {getFileIcon(doc.contentType)}
+          <FileFormatIcon filename={doc.filename} contentType={doc.contentType} size="sm" />
         </div>
 
         <div className="flex-1 min-w-0">
@@ -134,7 +135,7 @@ const DocumentItem: React.FC<{ doc: DocumentMetadataDto }> = ({ doc }) => {
           <button
             onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
             aria-label={expanded ? 'Collapse details' : 'Expand details'}
-            className="size-6 flex items-center justify-center rounded-md text-[#a3a3a3] hover:text-[#171717] dark:text-[#737373] dark:hover:text-[#f4f4f5] hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="size-7 flex items-center justify-center rounded-lg text-[#a3a3a3] hover:text-[#171717] dark:text-[#737373] dark:hover:text-[#f4f4f5] hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
           >
             {expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
           </button>
@@ -142,10 +143,10 @@ const DocumentItem: React.FC<{ doc: DocumentMetadataDto }> = ({ doc }) => {
             onClick={(e) => { e.stopPropagation(); handleDelete(); }}
             aria-label={confirmDelete ? 'Confirm delete' : 'Delete document'}
             className={cn(
-              'h-6 flex items-center justify-center rounded-md text-xs transition-colors cursor-pointer',
+              'h-7 flex items-center justify-center rounded-lg text-xs transition-colors cursor-pointer',
               confirmDelete
-                ? 'px-1.5 bg-rose-50 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400 border border-rose-200 dark:border-rose-500/25 font-sans font-medium text-[10px]'
-                : 'w-6 text-[#a3a3a3] hover:text-rose-600 dark:text-[#737373] dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10'
+                ? 'px-2 bg-rose-50 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400 border border-rose-200 dark:border-rose-500/25 font-sans font-medium text-[10px]'
+                : 'w-7 text-[#a3a3a3] hover:text-rose-600 dark:text-[#737373] dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10'
             )}
           >
             {confirmDelete ? 'Delete?' : <Trash2 className="size-3.5" />}
@@ -225,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-2xs z-30 md:hidden"
+            className="fixed inset-0 bg-black/60 dark:bg-black/75 backdrop-blur-xs z-40 md:hidden"
             aria-hidden="true"
           />
         )}
@@ -233,10 +234,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
 
       <aside
         className={cn(
-          'flex flex-col h-full bg-[#fafafa] dark:bg-[#101013] border-r border-[#e5e5e5] dark:border-white/[0.08] transition-all duration-200 flex-shrink-0 z-30 md:static fixed inset-y-0 left-0 top-13 md:top-0',
-          isSidebarOpen ? 'w-72 shadow-xl md:shadow-none' : 'w-0 -translate-x-full md:translate-x-0 overflow-hidden border-r-0'
+          'flex flex-col h-full bg-[#fafafa] dark:bg-[#101013] border-r border-[#e5e5e5] dark:border-white/[0.08] transition-all duration-200 flex-shrink-0 md:static fixed inset-y-0 left-0 top-0 md:top-0 z-50 md:z-30',
+          isSidebarOpen
+            ? 'w-[84vw] max-w-[320px] shadow-2xl md:w-72 md:shadow-none translate-x-0'
+            : 'w-0 -translate-x-full md:translate-x-0 overflow-hidden border-r-0 pointer-events-none md:pointer-events-auto'
         )}
       >
+        {/* Mobile Drawer Top Brand Bar */}
+        <div
+          className="flex md:hidden items-center justify-between px-3.5 py-3 border-b border-[#e5e5e5] dark:border-white/[0.08] bg-white dark:bg-[#141416] flex-shrink-0"
+          style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 12px)' }}
+        >
+          <div className="flex items-center gap-2">
+            <DocMindLogo size={22} className="rounded-lg shadow-2xs" />
+            <span className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight">DocMind</span>
+          </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            aria-label="Close sidebar"
+            className="size-8 rounded-lg flex items-center justify-center text-[#737373] hover:text-[#171717] dark:text-[#a3a3a3] dark:hover:text-[#f4f4f5] hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] transition-colors cursor-pointer active:scale-95"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+
         {/* Sidebar Mode Tabs */}
         <div className="flex items-center justify-between px-3 py-2 border-b border-[#e5e5e5] dark:border-white/[0.08] flex-shrink-0 bg-[#fafafa] dark:bg-[#101013]">
           <div className="flex items-center gap-0.5 bg-[#f0f0f0] dark:bg-[#18181c] p-0.5 rounded-lg border border-[#e5e5e5] dark:border-white/[0.06]">
@@ -250,7 +271,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
                   : 'text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5]'
               )}
             >
-              <FolderOpen className="size-3.5" />
+              <Files className="size-3.5" strokeWidth={1.75} />
               <span>Docs</span>
               <span className="text-[10px] font-mono tabular-nums text-[#737373] dark:text-[#a3a3a3] bg-[#f5f5f5] dark:bg-[#101013] px-1 rounded">
                 {documents.length}
@@ -267,7 +288,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
                   : 'text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5]'
               )}
             >
-              <MessageSquare className="size-3.5" />
+              <MessagesSquare className="size-3.5" strokeWidth={1.75} />
               <span>Chats</span>
               <span className="text-[10px] font-mono tabular-nums text-[#737373] dark:text-[#a3a3a3] bg-[#f5f5f5] dark:bg-[#101013] px-1 rounded">
                 {conversations.length}
@@ -278,7 +299,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
           <div className="flex items-center gap-1">
             {sidebarTab === 'documents' && (
               <button
-                onClick={onUploadClick}
+                onClick={() => {
+                  onUploadClick();
+                  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                    setIsSidebarOpen(false);
+                  }
+                }}
                 aria-label="Upload document"
                 className="size-7 flex items-center justify-center hover:bg-[#e5e5e5] dark:hover:bg-white/[0.08] rounded-md transition-colors cursor-pointer text-[#737373] hover:text-[#171717] dark:text-[#a3a3a3] dark:hover:text-[#f4f4f5]"
                 title="Upload document"
@@ -293,14 +319,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
               title="Refresh"
             >
               <RefreshCw className={cn('size-3.5', isLoadingDocuments && 'animate-spin text-[#171717] dark:text-[#f4f4f5]')} />
-            </button>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              aria-label="Close sidebar"
-              className="size-7 flex items-center justify-center hover:bg-[#e5e5e5] dark:hover:bg-white/[0.08] rounded-md transition-colors cursor-pointer text-[#737373] hover:text-[#171717] dark:text-[#a3a3a3] dark:hover:text-[#f4f4f5] md:hidden"
-              title="Close sidebar"
-            >
-              <X className="size-3.5" />
             </button>
           </div>
         </div>
@@ -334,7 +352,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
               ) : documents.length === 0 ? (
                 <div className="p-4 my-2 rounded-2xl border border-dashed border-[#e5e5e5] dark:border-white/[0.08] bg-white/60 dark:bg-[#141416]/40 text-center flex flex-col items-center">
                   <div className="size-9 rounded-xl bg-[#f5f5f5] dark:bg-white/[0.06] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-center mb-2.5 shadow-2xs">
-                    <FolderOpen className="size-4 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.5} />
+                    <Files className="size-4 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.5} />
                   </div>
                   <p className="text-xs font-semibold text-[#171717] dark:text-[#f4f4f5]">No indexed documents</p>
                   <p className="text-[11px] text-[#737373] dark:text-[#a3a3a3] mt-1 leading-relaxed max-w-[200px]">
@@ -347,10 +365,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onUploadClick }) => {
                     <Upload className="size-3" strokeWidth={2} />
                     <span>Upload document</span>
                   </button>
-                  <div className="flex flex-wrap gap-1 justify-center mt-3 pt-2.5 border-t border-[#f0f0f0] dark:border-white/[0.04] w-full">
-                    {['PDF', 'DOCX', 'TXT', 'MD', 'CSV'].map((ext) => (
-                      <span key={ext} className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#f5f5f5] dark:bg-white/[0.04] text-[#737373] dark:text-[#a3a3a3]">
-                        .{ext.toLowerCase()}
+                  <div className="flex flex-wrap gap-1.5 justify-center mt-3 pt-2.5 border-t border-[#f0f0f0] dark:border-white/[0.04] w-full">
+                    {(['pdf', 'docx', 'csv', 'md', 'txt'] as const).map((fmt) => (
+                      <span key={fmt} className="inline-flex items-center gap-1 text-[10px] font-sans px-1.5 py-0.5 rounded bg-[#f5f5f5] dark:bg-white/[0.04] text-[#737373] dark:text-[#a3a3a3] border border-[#e5e5e5] dark:border-white/[0.06]">
+                        <FileFormatIcon format={fmt} size="xs" />
+                        <span>.{fmt}</span>
                       </span>
                     ))}
                   </div>

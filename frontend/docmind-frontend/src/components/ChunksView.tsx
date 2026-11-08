@@ -8,6 +8,8 @@ import { useDocumentStore } from '../store/documentStore';
 import type { CitationDto } from '../types';
 import { cn } from '../lib/utils';
 import toast from 'react-hot-toast';
+import { FileFormatIcon } from './FileFormatIcon';
+import { SearchWaveBackground } from './SearchWaveBackground';
 
 const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, index }) => {
   const [expanded, setExpanded] = useState(false);
@@ -39,7 +41,10 @@ const ChunkCard: React.FC<{ chunk: CitationDto; index: number }> = ({ chunk, ind
 
         {/* File & meta */}
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-[#171717] dark:text-[#f4f4f5] truncate">{chunk.fileName}</p>
+          <div className="flex items-center gap-1.5">
+            <FileFormatIcon filename={chunk.fileName} size="xs" />
+            <p className="text-xs font-medium text-[#171717] dark:text-[#f4f4f5] truncate">{chunk.fileName}</p>
+          </div>
           <div className="flex items-center gap-2 mt-0.5">
             {chunk.pageNumber != null && (
               <span className="text-[11px] text-[#737373] dark:text-[#a3a3a3] flex items-center gap-1">
@@ -153,19 +158,22 @@ export const ChunksView: React.FC = () => {
   const uniqueFiles = [...new Set(chunks.map((c) => c.fileName))];
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-[#0c0c0e] transition-colors duration-150">
+    <div className="relative flex flex-col h-full overflow-hidden bg-white dark:bg-[#0c0c0e] transition-colors duration-150">
+      {/* Subtle Premium Lavender-White Wave Background */}
+      <SearchWaveBackground />
+
       {/* Header */}
-      <div className="px-6 py-3.5 border-b border-[#e5e5e5] dark:border-white/[0.08] flex-shrink-0 bg-[#fafafa] dark:bg-[#141416]">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight">Vector chunks</h1>
+      <div className="relative z-10 px-3.5 sm:px-6 py-2.5 sm:py-3.5 border-b border-[#e5e5e5]/80 dark:border-white/[0.08] flex-shrink-0 bg-white/40 dark:bg-[#141416]/80 backdrop-blur-md">
+        <div className="flex items-center justify-between mb-2.5 sm:mb-3">
+          <div className="flex items-center gap-2">
+            <h1 className="text-xs sm:text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight">Vector chunks</h1>
             {hasLoaded && (
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-mono tabular-nums bg-white dark:bg-white/[0.06] border border-[#e5e5e5] dark:border-white/[0.06] text-[#737373] dark:text-[#a3a3a3] px-2 py-0.5 rounded-md shadow-2xs">
-                  {filtered.length} of {chunks.length} chunks
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <span className="text-[10px] sm:text-[11px] font-mono tabular-nums bg-white dark:bg-white/[0.06] border border-[#e5e5e5] dark:border-white/[0.06] text-[#737373] dark:text-[#a3a3a3] px-1.5 sm:px-2 py-0.5 rounded-md shadow-2xs">
+                  {filtered.length} / {chunks.length}
                 </span>
                 {uniqueFiles.length > 1 && (
-                  <span className="text-xs text-[#737373] dark:text-[#a3a3a3] tabular-nums">· {uniqueFiles.length} files</span>
+                  <span className="text-[11px] sm:text-xs text-[#737373] dark:text-[#a3a3a3] tabular-nums hidden sm:inline">· {uniqueFiles.length} files</span>
                 )}
               </div>
             )}
@@ -176,12 +184,12 @@ export const ChunksView: React.FC = () => {
             className="flex items-center gap-1.5 text-xs border border-[#e5e5e5] dark:border-white/[0.08] hover:border-neutral-300 dark:hover:border-white/[0.16] text-[#737373] dark:text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 cursor-pointer bg-white dark:bg-[#141416] shadow-2xs font-sans"
           >
             <RefreshCw className={cn('size-3', isLoading && 'animate-spin')} />
-            <span>Refresh</span>
+            <span className="hidden sm:inline">Refresh</span>
           </button>
         </div>
 
         {/* Vector query input */}
-        <div className="flex gap-2 mb-2.5">
+        <div className="flex gap-2 mb-2">
           <div className="flex-1 flex items-center gap-2 bg-white dark:bg-[#16161a] border border-[#e5e5e5] dark:border-white/[0.1] focus-within:border-[#151515] dark:focus-within:border-white/30 rounded-xl px-3 py-1.5 transition-colors shadow-2xs">
             <Database className="size-3.5 text-[#a3a3a3] flex-shrink-0" />
             <input
@@ -189,8 +197,8 @@ export const ChunksView: React.FC = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && loadChunks()}
-              placeholder="Query terms to probe specific vector cluster (optional)"
-              className="flex-1 bg-transparent text-xs text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] outline-none"
+              placeholder="Query terms to probe vector cluster…"
+              className="flex-1 bg-transparent text-base sm:text-xs text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] outline-none"
             />
           </div>
           <button
@@ -217,10 +225,10 @@ export const ChunksView: React.FC = () => {
               value={textFilter}
               onChange={(e) => setTextFilter(e.target.value)}
               placeholder="Filter loaded chunks by text content…"
-              className="flex-1 bg-transparent text-xs text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] outline-none"
+              className="flex-1 bg-transparent text-base sm:text-xs text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] outline-none"
             />
             {textFilter && (
-              <button onClick={() => setTextFilter('')} className="text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] text-xs cursor-pointer">
+              <button onClick={() => setTextFilter('')} className="text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] text-xs cursor-pointer p-0.5">
                 <X className="size-3" />
               </button>
             )}
@@ -229,7 +237,7 @@ export const ChunksView: React.FC = () => {
       </div>
 
       {/* Chunks Canvas */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="relative z-10 flex-1 overflow-y-auto p-3.5 sm:p-6">
         {!hasLoaded && !isLoading && (
           <div className="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto">
             <div className="size-11 bg-[#f5f5f5] dark:bg-[#18181c] rounded-xl flex items-center justify-center mb-3 border border-[#e5e5e5] dark:border-white/[0.08] shadow-2xs">

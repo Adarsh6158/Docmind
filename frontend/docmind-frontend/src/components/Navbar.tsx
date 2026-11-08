@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Layers, MessageSquare, Search, Database, Upload, PanelLeft, FileText,
+  MessageSquare, Search, Database, Upload, PanelLeft,
   LogOut, Shield, ChevronDown, X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,8 @@ import { useDocumentStore } from '../store/documentStore';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../lib/utils';
 import ThemeToggle from './ThemeToggle';
+import { DocMindLogo } from './DocMindLogo';
+import { FileFormatIcon } from './FileFormatIcon';
 
 interface NavbarProps {
   onUploadClick: () => void;
@@ -58,9 +60,9 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
   };
 
   return (
-    <header className="flex items-center justify-between h-13 px-4 bg-white dark:bg-[#141416] border-b border-[#e5e5e5] dark:border-white/[0.08] flex-shrink-0 z-20 select-none transition-colors duration-150">
+    <header className="flex items-center justify-between h-13 px-3 sm:px-4 bg-white dark:bg-[#141416] border-b border-[#e5e5e5] dark:border-white/[0.08] flex-shrink-0 z-20 select-none transition-colors duration-150">
       {/* Left: sidebar toggle + brand */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className={cn(
@@ -73,21 +75,16 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
           <PanelLeft className={cn('size-4', !isSidebarOpen && 'text-[#171717] dark:text-[#f4f4f5]')} strokeWidth={1.75} />
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <div className="size-7 rounded-lg bg-[#f5f5f5] dark:bg-[#1e1e23] border border-[#e5e5e5] dark:border-white/[0.1] flex items-center justify-center shadow-2xs">
-            <Layers className="size-3.5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={2} />
-          </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight">DocMind</span>
-            <span className="text-[10px] font-sans font-medium text-[#737373] dark:text-[#a3a3a3] bg-[#f5f5f5] dark:bg-white/[0.06] border border-[#e5e5e5] dark:border-white/[0.06] px-1.5 py-0.5 rounded-md">
-              v1.0
-            </span>
-          </div>
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <DocMindLogo size={24} className="rounded-lg shadow-2xs" />
+          <span className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight font-sans">
+            DocMind
+          </span>
         </div>
       </div>
 
-      {/* Center: segmented navigation */}
-      <nav className="flex items-center">
+      {/* Center: segmented navigation (desktop only - mobile uses dedicated bottom nav) */}
+      <nav className="hidden md:flex items-center">
         <div className="flex items-center gap-0.5 bg-[#f5f5f5] dark:bg-[#1c1c20] border border-[#e5e5e5]/80 dark:border-white/[0.06] rounded-lg p-0.5 shadow-2xs">
           {tabs.map(({ id, label, icon: Icon }) => {
             const isActive = activeTab === id;
@@ -111,10 +108,10 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
       </nav>
 
       {/* Right: theme toggle + document context badge + upload + profile */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
         {selectedDoc && (
-          <div className="hidden md:flex items-center gap-1.5 bg-[#f5f5f5] dark:bg-[#1c1c20] border border-[#e5e5e5] dark:border-white/[0.08] pl-2.5 pr-1.5 py-1 rounded-lg text-xs max-w-[200px]">
-            <FileText className="size-3 text-[#737373] dark:text-[#a3a3a3] flex-shrink-0" strokeWidth={1.75} />
+          <div className="hidden lg:flex items-center gap-1.5 bg-[#f5f5f5] dark:bg-[#1c1c20] border border-[#e5e5e5] dark:border-white/[0.08] pl-2 pr-1.5 py-1 rounded-lg text-xs max-w-[180px]">
+            <FileFormatIcon filename={selectedDoc.filename} contentType={selectedDoc.contentType} size="xs" />
             <span className="text-[#171717] dark:text-[#f4f4f5] truncate font-medium text-xs">{selectedDoc.filename}</span>
             <button
               onClick={() => setSelectedDocumentId(null)}
@@ -134,13 +131,15 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
         <button
           onClick={onUploadClick}
           className={cn(
-            'flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium',
+            'flex items-center justify-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-lg text-xs font-medium',
             'bg-[#151515] text-white hover:bg-black dark:bg-[#ffffff] dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98] transition-all cursor-pointer',
             'shadow-2xs'
           )}
+          title="Upload document"
+          aria-label="Upload document"
         >
           <Upload className="size-3.5" strokeWidth={2} />
-          <span>Upload</span>
+          <span className="hidden sm:inline">Upload</span>
         </button>
 
         {/* User Dropdown */}
@@ -148,7 +147,7 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={cn(
-              'flex items-center gap-2 h-8 pl-1 pr-2 bg-[#f5f5f5] hover:bg-[#efefef] dark:bg-[#1c1c20] dark:hover:bg-white/[0.08]',
+              'flex items-center gap-1.5 sm:gap-2 h-8 pl-1 pr-1.5 sm:pr-2 bg-[#f5f5f5] hover:bg-[#efefef] dark:bg-[#1c1c20] dark:hover:bg-white/[0.08]',
               'border border-[#e5e5e5] dark:border-white/[0.08] rounded-lg transition-colors cursor-pointer group'
             )}
             aria-label="User menu"
@@ -163,7 +162,7 @@ const Navbar: React.FC<NavbarProps> = ({ onUploadClick }) => {
           </button>
 
           {isMenuOpen && (
-            <div className="absolute right-0 mt-1.5 w-54 bg-white dark:bg-[#18181b] border border-[#e5e5e5] dark:border-white/[0.1] rounded-xl shadow-xl py-1 z-50">
+            <div className="absolute right-0 mt-1.5 w-54 max-w-[calc(100vw-24px)] bg-white dark:bg-[#18181b] border border-[#e5e5e5] dark:border-white/[0.1] rounded-xl shadow-xl py-1 z-50">
               <div className="px-3.5 py-2.5 border-b border-[#e5e5e5] dark:border-white/[0.06]">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-xs font-semibold text-[#171717] dark:text-[#f4f4f5] truncate">{user?.username}</p>

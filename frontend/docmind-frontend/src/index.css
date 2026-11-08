@@ -19,6 +19,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -29,6 +30,33 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+button, a, input, textarea, select {
+  touch-action: manipulation;
+}
+
+/* ─── Safe Area Helpers for Modern Notch & Island Devices ─── */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pl-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+.pr-safe {
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* ─── Ultra-thin Minimalist Scrollbars ─── */
@@ -258,3 +286,34 @@ button, input, textarea {
 .dark .token.regex, .dark .token.important, .dark .token.variable { color: #fb923c; }
 .token.important, .token.bold { font-weight: bold; }
 .token.italic { font-style: italic; }
+
+/* ─── Live Streaming Signal Broadcast Wave Animations ─── */
+@keyframes signalWave {
+  0% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+
+.animate-signal-1 {
+  animation: signalWave 1.8s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.animate-signal-2 {
+  animation: signalWave 1.8s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+.animate-signal-3 {
+  animation: signalWave 1.8s ease-in-out infinite;
+  animation-delay: 0.6s;
+}

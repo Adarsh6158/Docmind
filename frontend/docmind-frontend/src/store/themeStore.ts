@@ -25,6 +25,10 @@ const applyThemeToDOM = (theme: Theme) => {
   } else {
     root.classList.remove('dark');
   }
+  const metaTheme = document.querySelectorAll('meta[name="theme-color"]');
+  metaTheme.forEach((el) => {
+    el.setAttribute('content', theme === 'dark' ? '#0c0c0e' : '#ffffff');
+  });
 };
 
 export const useThemeStore = create<ThemeState>((set, get) => {

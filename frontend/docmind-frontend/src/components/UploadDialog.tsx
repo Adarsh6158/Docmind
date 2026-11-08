@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
-  X, Upload, FileText, CheckCircle2, AlertCircle, Loader2, Plus,
-  File, FileType, FilePieChart, Trash2
+  X, Upload, CheckCircle2, AlertCircle, Loader2, Plus, Trash2
 } from 'lucide-react';
 import { documentApi } from '../services/api';
 import { useDocumentStore } from '../store/documentStore';
 import type { UploadingFile } from '../types';
 import toast from 'react-hot-toast';
 import { cn } from '../lib/utils';
+import { FileFormatIcon } from './FileFormatIcon';
 
 interface UploadDialogProps {
   isOpen: boolean;
@@ -27,14 +27,6 @@ function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
-}
-
-function getFileIcon(name: string) {
-  const ext = name.split('.').pop()?.toLowerCase();
-  if (ext === 'pdf') return <FileText className="size-4 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
-  if (ext === 'csv') return <FilePieChart className="size-4 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
-  if (ext === 'docx') return <FileType className="size-4 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />;
-  return <File className="size-4 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.75} />;
 }
 
 export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) => {
@@ -103,27 +95,27 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-2xs" onClick={handleClose} />
+      <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-xs" onClick={handleClose} />
 
       {/* Dialog */}
-      <div className="relative z-10 w-full max-w-lg bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative z-10 w-full max-w-lg max-h-[92dvh] flex flex-col bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#e5e5e5] dark:border-white/[0.08]">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-3.5 border-b border-[#e5e5e5] dark:border-white/[0.08] flex-shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="size-7 bg-[#f5f5f5] dark:bg-white/[0.08] border border-[#e5e5e5] dark:border-white/[0.1] rounded-lg flex items-center justify-center">
               <Upload className="size-3.5 text-[#171717] dark:text-[#f4f4f5]" strokeWidth={1.75} />
             </div>
             <div>
               <h2 className="text-sm font-semibold text-[#171717] dark:text-[#f4f4f5] tracking-tight">Upload documents</h2>
-              <p className="text-xs text-[#737373] dark:text-[#a3a3a3]">PDF, DOCX, TXT, MD, and CSV supported</p>
+              <p className="text-[11px] sm:text-xs text-[#737373] dark:text-[#a3a3a3]">PDF, DOCX, TXT, MD, and CSV supported</p>
             </div>
           </div>
           <button
             onClick={handleClose}
             disabled={isUploading}
-            className="size-7 flex items-center justify-center hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] rounded-md transition-colors text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] disabled:opacity-40 cursor-pointer"
+            className="size-8 sm:size-7 flex items-center justify-center hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] rounded-lg transition-colors text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] disabled:opacity-40 cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="size-4" />
@@ -131,33 +123,37 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
         </div>
 
         {/* Drop zone */}
-        <div className="p-5">
+        <div className="p-3.5 sm:p-5 overflow-y-auto flex-1">
           <div
             {...getRootProps()}
             className={cn(
-              'border border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors select-none',
+              'border border-dashed rounded-xl p-4 sm:p-8 text-center cursor-pointer transition-colors select-none active:scale-[0.99]',
               isDragActive
                 ? 'border-[#151515] bg-[#fafafa] dark:border-white dark:bg-white/[0.04]'
                 : 'border-[#e5e5e5] hover:border-neutral-400 bg-[#fafafa]/60 hover:bg-[#fafafa] dark:border-white/[0.12] dark:hover:border-white/[0.22] dark:bg-transparent dark:hover:bg-white/[0.02]'
             )}
           >
             <input {...getInputProps()} />
-            <div className="flex flex-col items-center gap-2.5">
-              <div className="size-10 rounded-xl bg-white dark:bg-[#18181c] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-center shadow-2xs">
-                <Upload className="size-4.5 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.5} />
+            <div className="flex flex-col items-center gap-2">
+              <div className="size-9 sm:size-10 rounded-xl bg-white dark:bg-[#18181c] border border-[#e5e5e5] dark:border-white/[0.08] flex items-center justify-center shadow-2xs">
+                <Upload className="size-4 sm:size-4.5 text-[#737373] dark:text-[#a3a3a3]" strokeWidth={1.5} />
               </div>
               <div>
                 <p className="text-xs font-medium text-[#171717] dark:text-[#f4f4f5]">
-                  {isDragActive ? 'Drop files here' : 'Drag and drop documents here'}
+                  {isDragActive ? 'Drop files here' : 'Tap to select documents'}
                 </p>
                 <p className="text-[#737373] dark:text-[#a3a3a3] text-[11px] mt-0.5">
-                  or <span className="text-[#171717] dark:text-[#f4f4f5] underline underline-offset-2">choose from your device</span>
+                  or <span className="text-[#171717] dark:text-[#f4f4f5] underline underline-offset-2">browse files from device</span>
                 </p>
               </div>
-              <div className="flex flex-wrap gap-1 justify-center mt-1">
-                {['PDF', 'DOCX', 'TXT', 'MD', 'CSV'].map((ext) => (
-                  <span key={ext} className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white dark:bg-white/[0.06] text-[#737373] dark:text-[#a3a3a3] border border-[#e5e5e5] dark:border-white/[0.06]">
-                    .{ext.toLowerCase()}
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center mt-2">
+                {(['pdf', 'docx', 'csv', 'md', 'txt'] as const).map((fmt) => (
+                  <span
+                    key={fmt}
+                    className="inline-flex items-center gap-1 sm:gap-1.5 text-xs font-sans px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-white dark:bg-white/[0.06] text-[#171717] dark:text-[#f4f4f5] border border-[#e5e5e5] dark:border-white/[0.08] shadow-2xs"
+                  >
+                    <FileFormatIcon format={fmt} size="xs" />
+                    <span className="font-mono text-[10px] sm:text-[11px] font-medium text-[#525252] dark:text-[#d4d4d8]">.{fmt}</span>
                   </span>
                 ))}
               </div>
@@ -167,11 +163,11 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
           {/* Stats Bar */}
           {files.length > 0 && (
             <div className="flex items-center justify-between mt-3 px-1 text-xs text-[#737373] dark:text-[#a3a3a3]">
-              <span className="tabular-nums">{files.length} file(s) · {formatBytes(totalSize)}</span>
+              <span className="tabular-nums text-[11px] sm:text-xs">{files.length} file(s) · {formatBytes(totalSize)}</span>
               <button
                 onClick={() => setFiles([])}
                 disabled={isUploading}
-                className="text-[#737373] hover:text-rose-600 dark:text-[#a3a3a3] dark:hover:text-rose-400 flex items-center gap-1 transition-colors disabled:opacity-40 cursor-pointer"
+                className="text-[#737373] hover:text-rose-600 dark:text-[#a3a3a3] dark:hover:text-rose-400 flex items-center gap-1 transition-colors disabled:opacity-40 cursor-pointer text-[11px] sm:text-xs"
               >
                 <Trash2 className="size-3" />
                 <span>Clear queue</span>
@@ -181,12 +177,12 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
 
           {/* File Queue List */}
           {files.length > 0 && (
-            <div className="mt-2 space-y-1.5 max-h-52 overflow-y-auto pr-1">
+            <div className="mt-2 space-y-1.5 max-h-48 overflow-y-auto pr-1">
               {files.map((uf) => (
                 <div key={uf.id} className="p-2.5 bg-[#fafafa] dark:bg-[#18181c] rounded-xl border border-[#e5e5e5] dark:border-white/[0.06] space-y-1.5 shadow-2xs">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 min-w-0">
-                      {getFileIcon(uf.file.name)}
+                      <FileFormatIcon filename={uf.file.name} size="sm" />
                       <p className="text-xs text-[#171717] dark:text-[#f4f4f5] font-medium truncate max-w-[220px]">{uf.file.name}</p>
                     </div>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -230,11 +226,11 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2.5 px-5 py-3 border-t border-[#e5e5e5] dark:border-white/[0.08] bg-[#fafafa] dark:bg-[#18181c]">
+        <div className="flex items-center justify-end gap-2 px-4 py-3 sm:px-5 sm:py-3.5 border-t border-[#e5e5e5] dark:border-white/[0.08] bg-[#fafafa] dark:bg-[#18181c] flex-shrink-0">
           <button
             onClick={handleClose}
             disabled={isUploading}
-            className="px-3.5 py-1.5 text-xs text-[#737373] hover:text-[#171717] dark:text-[#a3a3a3] dark:hover:text-[#f4f4f5] border border-[#e5e5e5] dark:border-white/[0.08] hover:border-neutral-300 dark:hover:border-white/[0.16] rounded-lg transition-colors disabled:opacity-50 cursor-pointer bg-white dark:bg-[#141416] shadow-2xs"
+            className="flex-1 sm:flex-initial h-9 px-4 text-xs font-medium text-[#737373] hover:text-[#171717] dark:text-[#a3a3a3] dark:hover:text-[#f4f4f5] border border-[#e5e5e5] dark:border-white/[0.08] hover:border-neutral-300 dark:hover:border-white/[0.16] rounded-xl transition-colors disabled:opacity-50 cursor-pointer bg-white dark:bg-[#141416] shadow-2xs active:scale-95"
           >
             {allDone ? 'Done' : 'Cancel'}
           </button>
@@ -243,9 +239,9 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ isOpen, onClose }) =
               onClick={handleUpload}
               disabled={isUploading || pendingCount === 0}
               className={cn(
-                'flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-lg transition-all border shadow-2xs cursor-pointer',
+                'flex-1 sm:flex-initial h-9 flex items-center justify-center gap-1.5 px-4 text-xs font-medium rounded-xl transition-all border shadow-2xs cursor-pointer active:scale-95',
                 !isUploading && pendingCount > 0
-                  ? 'bg-[#151515] text-white hover:bg-black border-transparent dark:bg-white dark:text-[#151515] dark:hover:bg-neutral-100 active:scale-[0.98]'
+                  ? 'bg-[#151515] text-white hover:bg-black border-transparent dark:bg-white dark:text-[#151515] dark:hover:bg-neutral-100'
                   : 'bg-[#f5f5f5] dark:bg-white/[0.04] text-[#a3a3a3] border-transparent cursor-not-allowed'
               )}
             >

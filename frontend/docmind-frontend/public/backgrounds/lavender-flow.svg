@@ -1,0 +1,67 @@
+<svg viewBox="0 0 410 212" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" class="w-full h-full">
+  <defs>
+    <!-- Base Canvas Ambient Gradient (Soft Lavender) -->
+    <linearGradient id="bgBase" x1="60" y1="30" x2="350" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E9E5F5" />
+      <stop offset="35%" stop-color="#E3DFF4" />
+      <stop offset="70%" stop-color="#EEEAF8" />
+      <stop offset="100%" stop-color="#FAF9FD" />
+    </linearGradient>
+
+    <!-- Deep Upper-Center Lavender Reservoir -->
+    <radialGradient id="lavenderDeep" cx="180" cy="70" r="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#DFDAF3" stop-opacity="0.75" />
+      <stop offset="60%" stop-color="#E6E2F6" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#EEEBF8" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Upper Right Luminous Arc Petal 1 -->
+    <linearGradient id="arcLuminous1" x1="380" y1="10" x2="280" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+      <stop offset="50%" stop-color="#F4F1FA" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#E6E1F6" stop-opacity="0.1" />
+    </linearGradient>
+
+    <!-- Upper Right Outer Subtle Halo Arc -->
+    <linearGradient id="arcLuminous2" x1="410" y1="0" x2="320" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+      <stop offset="60%" stop-color="#F1EEF9" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#E8E3F6" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Lower Flowing Glowing White Wave -->
+    <linearGradient id="flowingWave" x1="200" y1="95" x2="200" y2="212" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+      <stop offset="30%" stop-color="#F8F7FD" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.98" />
+    </linearGradient>
+
+    <!-- Soft Edge Feathering for the Wave -->
+    <linearGradient id="waveSheen" x1="180" y1="110" x2="240" y2="140" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EBE6F7" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- 1. Background Foundation -->
+  <rect width="410" height="212" fill="url(#bgBase)" />
+
+  <!-- 2. Lavender Depth Reservoir -->
+  <rect width="410" height="212" fill="url(#lavenderDeep)" />
+
+  <!-- 3. Upper Right Outer Luminous Arc -->
+  <path d="M410 0H330C326 30 338 65 365 92C382 109 397 120 410 126V0Z" fill="url(#arcLuminous2)" />
+
+  <!-- 4. Upper Right Sweeping Inner Arc Ribbon -->
+  <path d="M410 0H270C268 35 285 70 318 95C345 115 380 126 410 132V0Z" fill="url(#arcLuminous1)" />
+
+  <!-- 5. Soft Wave Contour Sheen -->
+  <path d="M0 178C50 162 110 136 170 122C210 112 250 108 290 100C330 92 370 76 410 52V68C370 90 330 105 290 113C250 120 210 125 170 134C110 148 50 174 0 190V178Z" fill="url(#waveSheen)" />
+
+  <!-- 6. Main Flowing White Wave Surface -->
+  <!-- Follows: (0, 180) -> (100, 148) -> (170, 124) -> (230, 114) -> (290, 103) -> (350, 80) -> (410, 56) -->
+  <path d="M0 180C45 164 105 138 165 124C215 113 255 109 295 102C335 94 375 78 410 56V212H0V180Z" fill="url(#flowingWave)" />
+
+  <!-- 7. Bottom Pure White Foundation Gradient Layer -->
+  <path d="M0 196C90 184 180 168 270 162C325 158 370 166 410 175V212H0V196Z" fill="#FFFFFF" fill-opacity="0.75" />
+</svg>

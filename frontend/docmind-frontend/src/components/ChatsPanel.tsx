@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
-  MessageSquare, Plus, Trash2, Clock, Search, Edit2, Check, X
+  MessageSquare, MessageSquarePlus, Trash2, Clock, Search, Edit2, Check, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useConversationStore } from '../store/conversationStore';
@@ -146,7 +146,7 @@ const ChatItem: React.FC<{
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-full bg-white dark:bg-[#101013] border border-[#151515] dark:border-white/30 text-[#171717] dark:text-[#f4f4f5] text-xs rounded px-2 py-0.5 focus:outline-none font-sans"
+                className="w-full bg-white dark:bg-[#101013] border border-[#151515] dark:border-white/30 text-[#171717] dark:text-[#f4f4f5] text-base sm:text-xs rounded px-2 py-0.5 focus:outline-none font-sans"
                 aria-label="Edit chat title"
               />
               <button
@@ -185,7 +185,7 @@ const ChatItem: React.FC<{
           <button
             onClick={handleStartEdit}
             aria-label="Rename conversation"
-            className="size-6 flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100 hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] text-[#a3a3a3] hover:text-[#171717] dark:text-[#737373] dark:hover:text-[#f4f4f5] transition-all cursor-pointer"
+            className="size-7 sm:size-6 flex items-center justify-center rounded-lg sm:opacity-0 sm:group-hover:opacity-100 opacity-70 hover:opacity-100 hover:bg-[#f5f5f5] dark:hover:bg-white/[0.06] text-[#a3a3a3] hover:text-[#171717] dark:text-[#737373] dark:hover:text-[#f4f4f5] transition-all cursor-pointer"
             title="Rename"
           >
             <Edit2 className="size-3" />
@@ -194,10 +194,10 @@ const ChatItem: React.FC<{
             onClick={handleDelete}
             aria-label={confirmDelete ? 'Confirm delete' : 'Delete conversation'}
             className={cn(
-              'h-6 flex items-center justify-center rounded-md text-xs transition-all cursor-pointer',
+              'h-7 sm:h-6 flex items-center justify-center rounded-lg text-xs transition-all cursor-pointer',
               confirmDelete
                 ? 'px-1.5 bg-rose-50 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400 border border-rose-200 dark:border-rose-500/25 font-sans font-medium text-[10px]'
-                : 'w-6 opacity-0 group-hover:opacity-100 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[#a3a3a3] hover:text-rose-600 dark:text-[#737373] dark:hover:text-rose-400'
+                : 'w-7 sm:w-6 sm:opacity-0 sm:group-hover:opacity-100 opacity-70 hover:opacity-100 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-[#a3a3a3] hover:text-rose-600 dark:text-[#737373] dark:hover:text-rose-400'
             )}
             title="Delete"
           >
@@ -219,17 +219,23 @@ export const ChatsPanel: React.FC = () => {
     deleteChat,
     renameChat,
   } = useConversationStore();
-  const { setActiveTab } = useDocumentStore();
+  const { setActiveTab, setIsSidebarOpen } = useDocumentStore();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleNewChat = () => {
     newChat();
     setActiveTab('chat');
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const handleSelectChat = (id: string) => {
     selectChat(id);
     setActiveTab('chat');
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const filteredConversations = useMemo(() => {
@@ -270,26 +276,26 @@ export const ChatsPanel: React.FC = () => {
           )}
         >
           <div className="flex items-center gap-2">
-            <Plus className="size-3.5" strokeWidth={2} />
+            <MessageSquarePlus className="size-3.5" strokeWidth={2} />
             <span>New Conversation</span>
           </div>
-          <span className="text-[10px] font-mono opacity-60">⌘K</span>
+          <span className="text-[10px] font-mono opacity-60 hidden sm:inline">⌘K</span>
         </button>
 
         {/* Search Input */}
         <div className="relative">
-          <Search className="absolute left-2.5 top-2 size-3.5 text-[#a3a3a3]" />
+          <Search className="absolute left-2.5 top-2.5 size-3.5 text-[#a3a3a3]" />
           <input
             type="text"
             placeholder="Search conversations…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.08] rounded-lg pl-8 pr-7 py-1.5 text-xs text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] outline-none focus:border-[#151515] dark:focus:border-white/20 transition-colors shadow-2xs font-sans"
+            className="w-full bg-white dark:bg-[#141416] border border-[#e5e5e5] dark:border-white/[0.08] rounded-lg pl-8 pr-7 py-1.5 text-base sm:text-xs text-[#171717] dark:text-[#f4f4f5] placeholder-[#a3a3a3] outline-none focus:border-[#151515] dark:focus:border-white/20 transition-colors shadow-2xs font-sans"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-2 top-2 text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] cursor-pointer"
+              className="absolute right-2 top-2.5 text-[#a3a3a3] hover:text-[#171717] dark:hover:text-[#f4f4f5] cursor-pointer"
             >
               <X className="size-3.5" />
             </button>

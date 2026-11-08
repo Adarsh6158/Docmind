@@ -23,7 +23,7 @@ const initialState = {
   selectedDocumentId: null as string | null,
   isLoadingDocuments: false,
   activeTab: 'chat' as const,
-  isSidebarOpen: true,
+  isSidebarOpen: false,
 };
 
 export const useDocumentStore = create<DocumentState>((set) => ({
